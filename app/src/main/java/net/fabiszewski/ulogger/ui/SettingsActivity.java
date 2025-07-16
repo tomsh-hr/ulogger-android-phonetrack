@@ -31,10 +31,8 @@ public class SettingsActivity extends AppCompatActivity {
     public static final String KEY_MIN_DISTANCE = "prefMinDistance";
     public static final String KEY_MIN_TIME = "prefMinTime";
     public static final String KEY_IMAGE_SIZE = "prefImageSize";
-    public static final String KEY_PASS = "prefPass";
     public static final String KEY_PROVIDER = "prefProvider";
     public static final String KEY_UNITS = "prefUnits";
-    public static final String KEY_USERNAME = "prefUsername";
     public static final String KEY_USE_GPS = "prefUseGps";
     public static final String KEY_USE_NET = "prefUseNet";
     public static final String KEY_LOGGER_RUNNING = "prefLoggerRunning";

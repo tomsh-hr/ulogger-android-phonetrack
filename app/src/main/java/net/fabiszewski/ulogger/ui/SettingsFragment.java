@@ -14,9 +14,7 @@ import static net.fabiszewski.ulogger.ui.SettingsActivity.KEY_AUTO_NAME;
 import static net.fabiszewski.ulogger.ui.SettingsActivity.KEY_AUTO_START;
 import static net.fabiszewski.ulogger.ui.SettingsActivity.KEY_HOST;
 import static net.fabiszewski.ulogger.ui.SettingsActivity.KEY_LIVE_SYNC;
-import static net.fabiszewski.ulogger.ui.SettingsActivity.KEY_PASS;
 import static net.fabiszewski.ulogger.ui.SettingsActivity.KEY_PROVIDER;
-import static net.fabiszewski.ulogger.ui.SettingsActivity.KEY_USERNAME;
 
 import android.content.Context;
 import android.content.SharedPreferences;
@@ -85,8 +83,6 @@ public class SettingsFragment extends PreferenceFragmentCompat implements Permis
      */
     private void setListeners() {
         final Preference prefLiveSync = findPreference(KEY_LIVE_SYNC);
-        final Preference prefUsername = findPreference(KEY_USERNAME);
-        final Preference prefPass = findPreference(KEY_PASS);
         final Preference prefHost = findPreference(KEY_HOST);
 
         // On change listener to destroy session cookies if server setup has changed
@@ -132,12 +128,6 @@ public class SettingsFragment extends PreferenceFragmentCompat implements Permis
         if (prefLiveSync != null) {
             prefLiveSync.setOnPreferenceChangeListener(liveSyncChanged);
         }
-        if (prefUsername != null) {
-            prefUsername.setOnPreferenceChangeListener(serverSetupChanged);
-        }
-        if (prefPass != null) {
-            prefPass.setOnPreferenceChangeListener(serverSetupChanged);
-        }
         if (prefHost != null) {
             prefHost.setOnPreferenceChangeListener(serverSetupChanged);
         }
@@ -164,9 +154,6 @@ public class SettingsFragment extends PreferenceFragmentCompat implements Permis
             }
         }
         // on click listeners
-        if (prefUsername != null) {
-            prefUsername.setOnPreferenceClickListener(serverSetupClicked);
-        }
         if (prefHost != null) {
             prefHost.setOnPreferenceClickListener(serverSetupClicked);
         }
@@ -205,11 +192,7 @@ public class SettingsFragment extends PreferenceFragmentCompat implements Permis
     public static boolean isValidServerSetup(@NonNull Context context) {
         final SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(context);
         final String host = prefs.getString(KEY_HOST, null);
-        final String user = prefs.getString(KEY_USERNAME, null);
-        final String pass = prefs.getString(KEY_PASS, null);
-        return ((host != null && !host.isEmpty())
-                && (user != null && !user.isEmpty())
-                && (pass != null && !pass.isEmpty()));
+        return (host != null && !host.isEmpty());
     }
 
     @Override

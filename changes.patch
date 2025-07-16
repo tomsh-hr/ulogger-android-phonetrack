@@ -1,0 +1,898 @@
+--- a/app/src/main/java/net/fabiszewski/ulogger/services/WebSyncService.java
++++ b/app/src/main/java/net/fabiszewski/ulogger/services/WebSyncService.java
+@@ -26,6 +26,7 @@
+ import android.os.Bundle;
+ import android.os.Handler;
+ import android.os.HandlerThread;
+ import android.os.IBinder;
++import android.os.BatteryManager;
+ import android.os.Looper;
+ import android.os.Message;
+ import android.util.Log;
+@@ -108,16 +109,6 @@
+         @Override
+         public void handleMessage(@NonNull Message msg) {
+             cancelPending();
+-
+-            if (!WebHelper.isAuthorized) {
+-                try {
+-                    web.authorize();
+-                } catch (WebAuthException | IOException | JSONException e) {
+-                    handleError(e);
+-                    stopSelf(msg.arg1);
+-                    return;
+-                }
+-            }
+ 
+             // get track id
+             int trackId = getTrackId();
+@@ -175,22 +166,10 @@
+             try {
+                 trackId = web.startTrack(trackName);
+                 db.setTrackId(trackId);
+-            } catch (IOException e) {
++            } catch (IOException | WebAuthException e) {
+                 if (Logger.DEBUG) { Log.d(TAG, "[getTrackId: io exception: " + e + "]"); }
+                 // schedule retry
+                 handleError(e);
+-            } catch (WebAuthException e) {
+-                if (Logger.DEBUG) { Log.d(TAG, "[getTrackId: auth exception: " + e + "]"); }
+-                WebHelper.deauthorize();
+-                try {
+-                    // reauthorize and retry
+-                    web.authorize();
+-                    trackId = web.startTrack(trackName);
+-                    db.setTrackId(trackId);
+-                } catch (WebAuthException|IOException|JSONException e2) {
+-                    // schedule retry
+-                    handleError(e2);
+-                }
+             }
+         }
+         return trackId;
+@@ -213,26 +192,13 @@
+                 db.setSynced(getApplicationContext(), rowId);
+                 BroadcastHelper.sendBroadcast(this, BROADCAST_SYNC_DONE);
+             }
+-        } catch (IOException e) {
++        } catch (IOException | WebAuthException e) {
+             // handle web errors
+             if (Logger.DEBUG) {
+                 Log.d(TAG, "[doSync: io exception: " + e + "]");
+             }
+             // schedule retry
+             handleError(e);
+-        } catch (WebAuthException e) {
+-            if (Logger.DEBUG) {
+-                Log.d(TAG, "[doSync: auth exception: " + e + "]");
+-            }
+-            WebHelper.deauthorize();
+-            try {
+-                // reauthorize and retry
+-                web.authorize();
+-                doSync(trackId);
+-            } catch (WebAuthException | IOException | JSONException e2) {
+-                // schedule retry
+-                handleError(e2);
+-            }
+         }
+     }
+ 
+@@ -342,6 +308,8 @@
+         if (DbAccess.hasImageUri(cursor)) {
+             params.put(WebHelper.PARAM_IMAGE, DbAccess.getImageUri(cursor));
+         }
++        BatteryManager bm = (BatteryManager) getSystemService(BATTERY_SERVICE);
++        params.put("bat", String.valueOf(bm.getIntProperty(BatteryManager.BATTERY_PROPERTY_CAPACITY)));
+         return params;
+     }
+ 
+--- a/app/src/main/java/net/fabiszewski/ulogger/ui/SelfCheckFragment.java
++++ b/app/src/main/java/net/fabiszewski/ulogger/ui/SelfCheckFragment.java
+@@ -82,8 +82,6 @@
+     private SwitchCompat serverConfiguredSwitch;
+     private SwitchCompat serverReachableSwitch;
+     private TextView serverReachableDetails;
+-    private TextView validAccountDetails;
+-    private SwitchCompat validAccountSwitch;
+     private View batteryUsageLayout;
+     private SwitchCompat batteryUsageSwitch;
+     final PermissionHelper permissionHelper;
+@@ -119,8 +117,6 @@
+         serverConfiguredSwitch = layout.findViewById(R.id.serverConfiguredResult);
+         serverReachableSwitch = layout.findViewById(R.id.serverReachableResult);
+         serverReachableDetails = layout.findViewById(R.id.serverReachableDetails);
+-        validAccountDetails = layout.findViewById(R.id.validAccountDetails);
+-        validAccountSwitch = layout.findViewById(R.id.validAccountResult);
+         batteryUsageLayout = layout.findViewById(R.id.batteryUnrestrictedSelfCheck);
+         batteryUsageSwitch = layout.findViewById(R.id.batteryUnrestrictedUsageResult);
+ 
+@@ -143,11 +139,8 @@
+         boolean isValidServerSetup = isValidServerSetup(requireContext());
+         serverReachableDetails.setText("");
+         serverReachableDetails.setVisibility(View.GONE);
+-        validAccountDetails.setText("");
+-        validAccountDetails.setVisibility(View.GONE);
+         setupServerSwitch(serverConfiguredSwitch, isValidServerSetup);
+         setupServerSwitch(serverReachableSwitch, false);
+-        setupServerSwitch(validAccountSwitch, false);
+ 
+         if (isValidServerSetup) {
+             setRefreshing(true);
+@@ -169,16 +162,6 @@
+             details = e.getLocalizedMessage();
+         }
+         postServerCheckResults(handler, serverReachableDetails, serverReachableSwitch, details, isReachable);
+-        if (isReachable) {
+-            boolean isValidAccount = false;
+-            try {
+-                webHelper.checkAuthorization();
+-                isValidAccount = true;
+-            } catch (IOException | WebAuthException | JSONException e) {
+-                details = e.getLocalizedMessage();
+-            }
+-            postServerCheckResults(handler, validAccountDetails, validAccountSwitch, details, isValidAccount);
+-        }
+         handler.post(() -> setRefreshing(false));
+     }
+ 
+--- a/app/src/main/java/net/fabiszewski/ulogger/ui/SettingsFragment.java
++++ b/app/src/main/java/net/fabiszewski/ulogger/ui/SettingsFragment.java
+@@ -14,9 +14,7 @@
+ import static net.fabiszewski.ulogger.ui.SettingsActivity.KEY_AUTO_START;
+ import static net.fabiszewski.ulogger.ui.SettingsActivity.KEY_HOST;
+ import static net.fabiszewski.ulogger.ui.SettingsActivity.KEY_LIVE_SYNC;
+-import static net.fabiszewski.ulogger.ui.SettingsActivity.KEY_PASS;
+ import static net.fabiszewski.ulogger.ui.SettingsActivity.KEY_PROVIDER;
+-import static net.fabiszewski.ulogger.ui.SettingsActivity.KEY_USERNAME;
+ 
+ import android.content.Context;
+ import android.content.SharedPreferences;
+@@ -83,18 +81,12 @@
+      */
+     private void setListeners() {
+         final Preference prefLiveSync = findPreference(KEY_LIVE_SYNC);
+-        final Preference prefUsername = findPreference(KEY_USERNAME);
+-        final Preference prefPass = findPreference(KEY_PASS);
+         final Preference prefHost = findPreference(KEY_HOST);
+ 
+         // On change listener to destroy session cookies if server setup has changed
+         Preference.OnPreferenceChangeListener serverSetupChanged = (preference, newValue) -> {
+             // update web helper settings, remove session cookies
+             WebHelper.updatePreferences(preference.getContext());
+-            // disable live synchronization if any server preference is removed
+-            if (newValue.toString().trim().isEmpty()) {
+-                disableLiveSync(preference.getContext());
+-            }
+             return true;
+         };
+ 
+@@ -102,8 +94,10 @@
+         Preference.OnPreferenceChangeListener liveSyncChanged = (preference, newValue) -> {
+             final Context context = preference.getContext();
+             if (Boolean.parseBoolean(newValue.toString())) {
+-                if (!isValidServerSetup(context)) {
+-                    Toast.makeText(context, R.string.provide_user_pass_url, Toast.LENGTH_LONG).show();
++                final SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(context);
++                final String host = prefs.getString(KEY_HOST, null);
++                if (host == null || host.isEmpty()) {
++                    Toast.makeText(context, R.string.provide_valid_url, Toast.LENGTH_LONG).show();
+                     return false;
+                 }
+             }
+@@ -130,12 +124,6 @@
+         if (prefLiveSync != null) {
+             prefLiveSync.setOnPreferenceChangeListener(liveSyncChanged);
+         }
+-        if (prefUsername != null) {
+-            prefUsername.setOnPreferenceChangeListener(serverSetupChanged);
+-        }
+-        if (prefPass != null) {
+-            prefPass.setOnPreferenceChangeListener(serverSetupChanged);
+-        }
+         if (prefHost != null) {
+             prefHost.setOnPreferenceChangeListener(serverSetupChanged);
+         }
+@@ -162,22 +150,11 @@
+             }
+         }
+         // on click listeners
+-        if (prefUsername != null) {
+-            prefUsername.setOnPreferenceClickListener(serverSetupClicked);
+-        }
+         if (prefHost != null) {
+             prefHost.setOnPreferenceClickListener(serverSetupClicked);
+         }
+     }
+ 
+-    /**
+-     * Disable live sync preference, reset checkbox
+-     * @param context Context
+-     */
+-    private void disableLiveSync(@NonNull Context context) {
+-        setBooleanPreference(context, KEY_LIVE_SYNC, false);
+-    }
+-
+     /**
+      * Enable preference, set checkbox
+      * @param context Context
+@@ -203,11 +180,7 @@
+     public static boolean isValidServerSetup(@NonNull Context context) {
+         final SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(context);
+         final String host = prefs.getString(KEY_HOST, null);
+-        final String user = prefs.getString(KEY_USERNAME, null);
+-        final String pass = prefs.getString(KEY_PASS, null);
+-        return ((host != null && !host.isEmpty())
+-                && (user != null && !user.isEmpty())
+-                && (pass != null && !pass.isEmpty()));
++        return (host != null && !host.isEmpty());
+     }
+ 
+     @Override
+--- a/app/src/main/java/net/fabiszewski/ulogger/utils/WebHelper.java
++++ b/app/src/main/java/net/fabiszewski/ulogger/utils/WebHelper.java
+@@ -77,8 +77,6 @@
+     private static CookieManager cookieManager = null;
+ 
+     private static String host;
+-    private static String user;
+-    private static String pass;
+ 
+     private static final String CLIENT_SCRIPT = "client/index.php";
+     private static final String PARAM_ACTION = "action";
+@@ -99,8 +97,6 @@
+ 
+     // auth
+     private static final String ACTION_AUTH = "auth";
+-    private static final String PARAM_USER = "user";
+-    private static final String PARAM_PASS = "pass";
+ 
+     // addtrack
+     private static final String ACTION_ADDTRACK = "addtrack";
+@@ -440,51 +436,6 @@
+         }
+     }
+ 
+-    /**
+-     * Authorize on server
+-     * @throws IOException Connection error
+-     * @throws WebAuthException Authorization error
+-     * @throws JSONException Response parsing error
+-     */
+-    public void authorize() throws IOException, WebAuthException, JSONException {
+-        if (Logger.DEBUG) { Log.d(TAG, "[authorize]"); }
+-        Map<String, String> params = new HashMap<>();
+-        params.put(PARAM_ACTION, ACTION_AUTH);
+-        params.put(PARAM_USER, user);
+-        params.put(PARAM_PASS, pass);
+-        String response = postWithParams(params);
+-        JSONObject json = new JSONObject(response);
+-        boolean error = json.getBoolean("error");
+-        if (error) {
+-            throw new WebAuthException(context.getString(R.string.e_server_response));
+-        }
+-        isAuthorized = true;
+-    }
+-
+-    /**
+-     * Remove authorization by removing session cookie
+-     */
+-    public static void deauthorize() {
+-        if (Logger.DEBUG) { Log.d(TAG, "[deauthorize]"); }
+-        if (cookieManager != null) {
+-            CookieStore store = cookieManager.getCookieStore();
+-            store.removeAll();
+-        }
+-        isAuthorized = false;
+-    }
+-
+-    public void checkAuthorization() throws JSONException, IOException, WebAuthException {
+-        boolean wasAuthorized = isAuthorized;
+-        try {
+-            authorize();
+-            if (!wasAuthorized) {
+-                deauthorize();
+-            }
+-        } catch (IOException | WebAuthException | JSONException e) {
+-            if (Logger.DEBUG) { Log.d(TAG, "[isValidAccount exception: " + e + "]"); }
+-            throw e;
+-        }
+-    }
+ 
+     /**
+      * Ping server without authorization
+@@ -551,8 +502,6 @@
+      */
+     private static void loadPreferences(@NonNull Context context) {
+         SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(context);
+-        user = prefs.getString(SettingsActivity.KEY_USERNAME, "NULL");
+-        pass = prefs.getString(SettingsActivity.KEY_PASS, "NULL");
+         host = prefs.getString(SettingsActivity.KEY_HOST, "NULL").replaceAll("/+$", "");
+     }
+ 
+@@ -562,7 +511,6 @@
+      */
+      public static void updatePreferences(@NonNull Context context) {
+         loadPreferences(context);
+-        deauthorize();
+     }
+ 
+     /**
+--- a/app/src/main/res/values-ca/strings.xml
++++ b/app/src/main/res/values-ca/strings.xml
+@@ -20,10 +20,6 @@
+     <string name="submit">Enviar</string>
+     <string name="ok">OK</string>
+     <string name="settings">Configuració</string>
+-    <string name="pref_username_title">Nom d’usuari</string>
+-    <string name="pref_username_summary">Nom d’usuari al servidor remot</string>
+-    <string name="pref_pass_title">Contrasenya</string>
+-    <string name="pref_pass_summary">Contrasenya de l’usuari al servidor remot</string>
+     <string name="pref_host_title">URL del servidor</string>
+     <string name="pref_host_summary">URL base del servidor remot</string>
+     <string name="pref_mintime_title">Temps mínim</string>
+@@ -35,7 +31,7 @@
+     <string name="pref_imagesize_title">Tamany de l’imatge</string>
+     <string name="pref_imagesize_summary">Ampla i alçada màximes de les imatges pujades, en píxels. En cas de reducció, la còpia de la imatge redimensionada s’emmagatzemarà temporalment a la carpeta de l’aplicació abans de pujar-la. Si trieu l’opció “mida actuall”, no es farà cap còpia, els fitxers originals han d’estar disponibles durant la càrrega.</string>
+     <string name="pref_livesync_title">Sincronització contínua</string>
+-    <string name="pref_livesync_summary">Pujada contínua de posicions cap al servidor. Requereix usuari, contrasenya i la url del servidor vàlids.</string>
++    <string name="pref_livesync_summary">Pujada contínua de posicions cap al servidor. Requereix la url del servidor vàlida.</string>
+     <string name="pref_autostart_title">Inici automàtic</string>
+     <string name="pref_autostart_summary">L’aplicació s’iniciarà a l’arrancar el sistema</string>
+     <string name="pref_external_title">Permetre comandes externes</string>
+@@ -81,7 +77,6 @@
+     <string name="unit_kilometer">km</string>
+     <string name="unit_mile">mi.</string>
+     <string name="provide_valid_url">Si us plau, indica una url de servidor vàlida</string>
+-    <string name="provide_user_pass_url">Si us plau, indica primer l’usuari, contrasenya i url del servidor</string>
+     <string name="e_illegal_state">Excepció d’estat il·legal: %s</string>
+     <string name="e_illegal_redirect">Redirecció il·legal: %d</string>
+     <string name="e_auth_failure">Error d’autenticació: %d</string>
+--- a/app/src/main/res/values-cs/strings.xml
++++ b/app/src/main/res/values-cs/strings.xml
+@@ -21,10 +21,6 @@
+     <string name="submit">Odeslat</string>
+     <string name="ok">OK</string>
+     <string name="settings">Nastavení</string>
+-    <string name="pref_username_title">Uživatelské jméno</string>
+-    <string name="pref_username_summary">Přihlášení uživatele na vzdáleném serveru</string>
+-    <string name="pref_pass_title">Heslo</string>
+-    <string name="pref_pass_summary">Heslo uživatele na vzdáleném serveru</string>
+     <string name="pref_host_title">URL Serveru</string>
+     <string name="pref_host_summary">Základní URL vzdáleného serveru</string>
+     <string name="pref_mintime_title">Minimální doba</string>
+@@ -36,7 +32,7 @@
+     <string name="pref_imagesize_title">Velikost obrázku</string>
+     <string name="pref_imagesize_summary">Maximální šířka / výška nahraných obrázků v pixelech. V případě převzorkování ve zmenšené velikosti bude kopie dočasně uložena do složky aplikace před nahráním. Pokud zvolíte možnost „skutečná velikost“, nebude vytvořena žádná kopie, takže během nahrávání musí být k dispozici původní soubory.</string>
+     <string name="pref_livesync_title">Okamžitá synchronizace</string>
+-    <string name="pref_livesync_summary">Okamžité nahrávání pozic na server. Vyžaduje platné uživatelské jméno, heslo a URL serveru.</string>
++    <string name="pref_livesync_summary">Okamžité nahrávání pozic na server. Vyžaduje platné URL serveru.</string>
+     <string name="pref_autostart_title">Automatický start</string>
+     <string name="pref_autostart_summary">Aplikace se spustí při startu systému</string>
+     <string name="pref_external_title">Povolit externí příkazy</string>
+@@ -83,7 +79,6 @@
+     <string name="unit_kilometer">km</string>
+     <string name="unit_mile">mi.</string>
+     <string name="provide_valid_url">Zadejte platnou adresu URL serveru</string>
+-    <string name="provide_user_pass_url">Nejprve zadejte uživatele, heslo a URL serveru</string>
+     <string name="e_illegal_state">Chyba nelegálního stavu: %s</string>
+     <string name="e_illegal_redirect">Nelegální přesměrování: %d</string>
+     <string name="e_auth_failure">Selhání autorizace: %d</string>
+@@ -153,6 +148,5 @@
+     <string name="self_check_providers_title">Poskytovatelé umístění</string>
+     <string name="self_check_server_configured">Konfigurace serveru</string>
+     <string name="self_check_server_reachable">Server je dosažitelný</string>
+-    <string name="self_check_valid_server_account">Platný účet serveru</string>
+     <string name="self_check_automated_usage">* Automatizované použití: spuštění protokolování bez interakce uživatele z externí aplikace nebo při spuštění systému.</string>
+ </resources>
+--- a/app/src/main/res/values-de/strings.xml
++++ b/app/src/main/res/values-de/strings.xml
+@@ -21,10 +21,6 @@
+     <string name="submit">Erstellen</string>
+     <string name="ok">Ok</string>
+     <string name="settings">Einstellungen</string>
+-    <string name="pref_username_title">Benutzername</string>
+-    <string name="pref_username_summary">Server-Benutzername</string>
+-    <string name="pref_pass_title">Passwort</string>
+-    <string name="pref_pass_summary">Server-Passwort</string>
+     <string name="pref_host_title">Server-URL</string>
+     <string name="pref_host_summary">Server-URL</string>
+     <string name="pref_mintime_title">Mindester Zeitabstand</string>
+@@ -36,7 +32,7 @@
+     <string name="pref_imagesize_title">Bildgröße</string>
+     <string name="pref_imagesize_summary">Maximale Breite/Höhe des hochgeladenen Bildes in Pixeln. Ein evtl verkeinertes Bild wird vorübergehend im App-Ordner gespeichert. Wenn du \"tatsächliche Größe\" wählst, wird keine Kopie angelegt und die Originaldatei muss während des Uploads verfügbar sein.</string>
+     <string name="pref_livesync_title">Live-Synchronisation</string>
+-    <string name="pref_livesync_summary">Live-Synchronisation mit Server. Gültiger Server/Benutzername/Passwort erforderlich.</string>
++    <string name="pref_livesync_summary">Live-Synchronisation mit Server. Gültige Server-URL erforderlich.</string>
+     <string name="pref_autostart_title">Autostart</string>
+     <string name="pref_autostart_summary">Applikation beim Booten starten</string>
+     <string name="pref_external_title">Aufrufe von dritten Applikation zulassen</string>
+@@ -81,7 +77,6 @@
+     <string name="unit_kilometer">km</string>
+     <string name="unit_mile">mi</string>
+     <string name="provide_valid_url">Bitte gültige Server-URL angeben</string>
+-    <string name="provide_user_pass_url">Bitte zuerst Benutzername, Passwort und Server-URL angeben</string>
+     <string name="e_illegal_state">Ungültige Zustand Fehler: %s</string>
+     <string name="e_illegal_redirect">Ungültige Weiterleitung: %d</string>
+     <string name="e_auth_failure">Anmeldefehler: %d</string>
+--- a/app/src/main/res/values-el/strings.xml
++++ b/app/src/main/res/values-el/strings.xml
+@@ -21,10 +21,6 @@
+     <string name="submit">Υποβολή</string>
+     <string name="ok">OK</string>
+     <string name="settings">Ρυθμίσεις</string>
+-    <string name="pref_username_title">Όνομα Χρήστη</string>
+-    <string name="pref_username_summary">Σύνδεση Χρήστη στον απομακρυσμένο διακομιστή</string>
+-    <string name="pref_pass_title">Κωδικός</string>
+-    <string name="pref_pass_summary">Κωδικός Χρήστη στον απομακρυσμένο διακομιστή</string>
+     <string name="pref_host_title">URL Διακομιστή</string>
+     <string name="pref_host_summary">URL Βάσης του απομακrυσμένου διακομιστή</string>
+     <string name="pref_mintime_title">Ελάχιστος χρόνος</string>
+@@ -36,7 +32,7 @@
+     <string name="pref_imagesize_title">Μέγεθος εικόνας</string>
+     <string name="pref_imagesize_summary">Μέγιστο πλάτος/ύψος της αποσταλείσας  εικόνας σε πίξελ. Σε περίπτωση σμίκρυνσης, ένα αναδιαστασιολογημένο αντίγραφο θα αποθηκευθεί προσωρινά στο φάκελο της εφαρμογής πριν την αποστολή. Αν επιλέξετε \"πραγματικό μέγεθος\", δεν θα δημιουργηθεί αντίγραφο, δια τούτου τα αρχικά αρχεία θα πρέπει να διατίθενται κατά την αποστολή.</string>
+     <string name="pref_livesync_title">Συγχρονισμός σε πραγματικό χρόνο</string>
+-    <string name="pref_livesync_summary">Αποστολή σε πραγματικό χρόνο των θέσεων στον διακομιστή.Απαιτεί έγκυρο Όνομα Χρήστη, κωδικό και URL του διακομιστή.</string>
++    <string name="pref_livesync_summary">Αποστολή σε πραγματικό χρόνο των θέσεων στον διακομιστή.Απαιτεί έγκυρο URL του διακομιστή.</string>
+     <string name="pref_autostart_title">Αυτόματη εκκίνηση</string>
+     <string name="pref_autostart_summary">Η εφαρμογή θα εκκινηθεί κατά την εκκίνηση του συστήματος</string>
+     <string name="pref_external_title">Επιτρέψτε εξωτερικές εντολές</string>
+@@ -81,7 +77,6 @@
+     <string name="unit_kilometer">χιλ.</string>
+     <string name="unit_mile">μίλια</string>
+     <string name="provide_valid_url">Παρακαλώ ορίστε έγκυρο URL διακομιστού</string>
+-    <string name="provide_user_pass_url">Παρακαλώ ορίστε Χρήστη, κωδικό και URL διακομιστού πρώτα</string>
+     <string name="e_illegal_state">Σφάλμα έκνομης κατάστασης: %s</string>
+     <string name="e_illegal_redirect">Εσφαλμένη εκτροπή: %d</string>
+     <string name="e_auth_failure">Αποτυχία πιστοποίησης: %d</string>
+--- a/app/src/main/res/values-es/strings.xml
++++ b/app/src/main/res/values-es/strings.xml
+@@ -21,10 +21,6 @@
+     <string name="submit">Enviar</string>
+     <string name="ok">OK</string>
+     <string name="settings">Ajustes</string>
+-    <string name="pref_username_title">Nombre de usuario</string>
+-    <string name="pref_username_summary">Nombre de usuario en el servidor remoto</string>
+-    <string name="pref_pass_title">Contraseña</string>
+-    <string name="pref_pass_summary">Contraseña del usuario en el servidor remoto</string>
+     <string name="pref_host_title">URL del servidor</string>
+     <string name="pref_host_summary">URL base del servidor remoto</string>
+     <string name="pref_mintime_title">Tiempo mínimo</string>
+@@ -36,7 +32,7 @@
+     <string name="pref_imagesize_title">Tamaño de la imagen</string>
+     <string name="pref_imagesize_summary">Máxima anchura/altura de la imagen a cargar, en píxeles. En caso de reducción de la imagen, una copia se guardará en la aplicación antes de cargarla. Si escoge la opción “Tamaño actual” no se guardará una copia, las imágenes originales deberán estar disponibles durante la carga.</string>
+     <string name="pref_livesync_title">Sincronización continua</string>
+-    <string name="pref_livesync_summary">Subida continua de posiciones al servidor. Requiere un usuario, contraseña y URL de servidor válidos.</string>
++    <string name="pref_livesync_summary">Subida continua de posiciones al servidor. Requiere una URL de servidor válida.</string>
+     <string name="pref_autostart_title">Inicio automático</string>
+     <string name="pref_autostart_summary">La aplicación se iniciará al arrancar el sistema</string>
+     <string name="pref_external_title">Permitir comandos externos</string>
+@@ -82,7 +78,6 @@
+     <string name="unit_kilometer">km</string>
+     <string name="unit_mile">mi.</string>
+     <string name="provide_valid_url">Por favor, indica una URL de servidor válida</string>
+-    <string name="provide_user_pass_url">Por favor, indica primero el usuario, contraseña y URL del servidor</string>
+     <string name="e_illegal_state">Excepción de estado ilegal: %s</string>
+     <string name="e_illegal_redirect">Redirección ilegal: %d</string>
+     <string name="e_auth_failure">Fallo de autenticación: %d</string>
+--- a/app/src/main/res/values-eu/strings.xml
++++ b/app/src/main/res/values-eu/strings.xml
+@@ -20,10 +20,6 @@
+     <string name="submit">Bidali</string>
+     <string name="ok">Ados</string>
+     <string name="settings">Ezarpenak</string>
+-    <string name="pref_username_title">Erabiltzaile izena</string>
+-    <string name="pref_username_summary">Urruneko zerbitzariko erabiltzaile izena</string>
+-    <string name="pref_pass_title">Pasahitza</string>
+-    <string name="pref_pass_summary">Urruneko zerbitzariko pasahitza</string>
+     <string name="pref_host_title">Zerbitzariko URLa</string>
+     <string name="pref_host_summary">Urruneko zerbitzariko oinarri URLa</string>
+     <string name="pref_mintime_title">Denbora tarte minimoa</string>
+@@ -35,7 +31,7 @@
+     <string name="pref_imagesize_title">Irudi tamaina</string>
+     <string name="pref_imagesize_summary">Igotako irudien tamaina maximoa, zabalera/altuera pixeletan. Irudia txikiagotuz gero, behin behineko kopia bat gordeko da aplikazioaren karpetan igo aurretik. \"Jatorrizko tamaina\" aukeratzen baduzu ez da kopiarik gordeko, hortaz, igoerak dirauen bitartean irudiaren fitxategi originalek eskuragarri egon behar dute</string>
+     <string name="pref_livesync_title">Zuzeneko sinkronizazioa</string>
+-    <string name="pref_livesync_summary">Kokapena zuzenean zerbitzarira igo. Baliozko erabiltzaile, pasahitz eta zerbitzariaren URLa behar ditu</string>
++    <string name="pref_livesync_summary">Kokapena zuzenean zerbitzarira igo. Baliozko zerbitzariaren URLa behar du</string>
+     <string name="pref_autostart_title">Automatikoki hasi </string>
+     <string name="pref_autostart_summary">Aplikazioa sistema abiatzean automatikoki hasiko da</string>
+     <string name="pref_external_title">Kanpoko komandoak onartu</string>
+@@ -80,7 +76,6 @@
+     <string name="unit_kilometer">km</string>
+     <string name="unit_mile">mi.</string>
+     <string name="provide_valid_url">Mesedez, ezarri baliozko URLa</string>
+-    <string name="provide_user_pass_url">Mesedez, sartu lehenengo erabiltzailea, pasahitza eta zerbitzariko URLa</string>
+     <string name="e_illegal_state">Egoera ilegala errorea: %s</string>
+     <string name="e_illegal_redirect">Berbideraketa ilegala: %d</string>
+     <string name="e_auth_failure">Authorization failure: %d</string>
+--- a/app/src/main/res/values-fi/strings.xml
++++ b/app/src/main/res/values-fi/strings.xml
+@@ -21,10 +21,6 @@
+     <string name="submit">Lähetä</string>
+     <string name="ok">OK</string>
+     <string name="settings">Asetukset</string>
+-    <string name="pref_username_title">Käyttäjänimi</string>
+-    <string name="pref_username_summary">Käyttäjätunnus etäpalvelimella</string>
+-    <string name="pref_pass_title">Salasana</string>
+-    <string name="pref_pass_summary">Käyttäjän salasana etäpalvelimella</string>
+     <string name="pref_host_title">Palvelimen URL</string>
+     <string name="pref_host_summary">Etäpalvelimen perus-URL-osoite</string>
+     <string name="pref_mintime_title">Vähimmäisaika</string>
+@@ -36,7 +32,7 @@
+     <string name="pref_imagesize_title">Kuvan koko</string>
+     <string name="pref_imagesize_summary">Lähetettyjen kuvien enimmäisleveys ja -korkeus pikseleinä. Jos kuvan kokoa pienennetään, kooltaan muutetun kuvan kopio tallennetaan tilapäisesti sovelluksen hakemistoon ennen verkkoon lähetystä. Jos valitset \"alkuperäinen koko\"-valinnan, kopiointia ei tehdä, ja alkuperäisten tiedostojen tulee olla käytettävissä lähetyksen ajan.</string>
+     <string name="pref_livesync_title">Live-synkronointi</string>
+-    <string name="pref_livesync_summary">Ajantasainen sijaintien lähetys palvelimelle. Edellyttää kelvollisen käyttäjätunnuksen, salasanan ja palvelimen URL-osoitteen.</string>
++    <string name="pref_livesync_summary">Ajantasainen sijaintien lähetys palvelimelle. Edellyttää kelvollisen palvelimen URL-osoitteen.</string>
+     <string name="pref_autostart_title">Automaattinen käynnistys</string>
+     <string name="pref_autostart_summary">Sovellus käynnistyy järjestelmän käynnistyksessä</string>
+     <string name="pref_external_title">Salli ulkoiset komennot</string>
+@@ -81,7 +77,6 @@
+     <string name="unit_kilometer">km</string>
+     <string name="unit_mile">mi</string>
+     <string name="provide_valid_url">Anna kelvollinen palvelimen URL-osoite</string>
+-    <string name="provide_user_pass_url">Anna ensin käyttäjätunnus, salasana ja palvelimen URL</string>
+     <string name="e_illegal_state">Epäkelvon tilan virhe: %s</string>
+     <string name="e_illegal_redirect">Epäkelpo uudelleenohjaus: %d</string>
+     <string name="e_auth_failure">Tunnistautumisen virhe: %d</string>
+@@ -149,6 +144,5 @@
+     <string name="self_check_providers_title">Sijaintitietojen tarjoajat</string>
+     <string name="self_check_server_configured">Palvelin määritetty</string>
+     <string name="self_check_server_reachable">Palvelin tavoitettavissa</string>
+-    <string name="self_check_valid_server_account">Palvelintili on kelvollinen</string>
+     <string name="self_check_automated_usage">* Automaatiokäyttö: lokitus aloitetaan ilman käyttäjän toimia ulkoisesta sovelluksesta tai järjestelmän käynnistyksessä.</string>
+ </resources>
+--- a/app/src/main/res/values-fr/strings.xml
++++ b/app/src/main/res/values-fr/strings.xml
+@@ -21,10 +21,6 @@
+     <string name="submit">Envoyer</string>
+     <string name="ok">Ok</string>
+     <string name="settings">Réglages</string>
+-    <string name="pref_username_title">Nom d’utilisateur</string>
+-    <string name="pref_username_summary">Nom d’utilisateur sur le serveur distant</string>
+-    <string name="pref_pass_title">Mot de passe</string>
+-    <string name="pref_pass_summary">Mot de passe sur le serveur distant</string>
+     <string name="pref_host_title">Adresse du serveur</string>
+     <string name="pref_host_summary">Adresse racine du serveur distant</string>
+     <string name="pref_mintime_title">Temps minimum</string>
+@@ -36,7 +32,7 @@
+     <string name="pref_imagesize_title">Taille d’image</string>
+     <string name="pref_imagesize_summary">Largeur/hauteur maximale des images téléchargées en pixels. En cas de sous-échantillonnage, les images redimensionnées seront temporairement stockées dans le dossier d’application avant d’être téléverséess. Si vous choisissez l’option \"taille native\", aucune copie ne sera faite, les fichiers originaux doivent donc être disponibles pendant le téléchargement.</string>
+     <string name="pref_livesync_title">Synchronisation immédiate</string>
+-    <string name="pref_livesync_summary">Mise à jour directe de la position sur le serveur. Nécessite un nom d’utilisateur, un mot de passe et une adresse de serveur valide.</string>
++    <string name="pref_livesync_summary">Mise à jour directe de la position sur le serveur. Nécessite une adresse de serveur valide.</string>
+     <string name="pref_autostart_title">Enregistrement automatique</string>
+     <string name="pref_autostart_summary">L’application enregistrera au démarrage du téléphone</string>
+     <string name="pref_external_title">Autoriser les actions externes</string>
+@@ -82,7 +78,6 @@
+     <string name="unit_kilometer">km</string>
+     <string name="unit_mile">mi.</string>
+     <string name="provide_valid_url">Merci de remplir une adresse de serveur valide</string>
+-    <string name="provide_user_pass_url">Merci d’entrer un nom d’utilisateur, un mot de passe et une adresse de serveur</string>
+     <string name="e_illegal_state">Erreur d’état : %s</string>
+     <string name="e_illegal_redirect">Redirection illégale : %d</string>
+     <string name="e_auth_failure">Erreur d’authentification : %d</string>
+@@ -151,6 +146,5 @@
+     <string name="self_check_providers_title">Services de localisation</string>
+     <string name="self_check_server_configured">Serveur configuré</string>
+     <string name="self_check_server_reachable">Serveur joignable</string>
+-    <string name="self_check_valid_server_account">Compte valide sur le serveur</string>
+     <string name="self_check_automated_usage">* Utilisation automatisée : démarrage de la journalisation sans interaction de l\'utilisateur à partir d\'une application externe ou au démarrage du système.</string>
+ </resources>
+--- a/app/src/main/res/values-gl/strings.xml
++++ b/app/src/main/res/values-gl/strings.xml
+@@ -21,10 +21,6 @@
+     <string name="submit">Enviar</string>
+     <string name="ok">OK</string>
+     <string name="settings">Axustes</string>
+-    <string name="pref_username_title">Identificador</string>
+-    <string name="pref_username_summary">Inicio de sesión no servidor remoto</string>
+-    <string name="pref_pass_title">Contrasinal</string>
+-    <string name="pref_pass_summary">Contrasinal da usuaria no servidor remoto</string>
+     <string name="pref_host_title">URL do servidor</string>
+     <string name="pref_host_summary">URL base do servidor remoto</string>
+     <string name="pref_mintime_title">Tempo mínimo</string>
+@@ -36,7 +32,7 @@
+     <string name="pref_imagesize_title">Tamaño da imaxe</string>
+     <string name="pref_imagesize_summary">Ancho/Alto máximo en píxeles para as imaxes subidas. En caso de reducilas gárdase no cartafol da aplicación unha copia temporal antes de subila. Se elixes a opción \"tamaño real\" entón non se fará copia, polo que os ficheiros orixinais deben estar dispoñibles para subilos.</string>
+     <string name="pref_livesync_title">Sincronización en directo</string>
+-    <string name="pref_livesync_summary">Subir en directo as posicións ao servidor. Require un identificador válido, contrasinal e URL do servidor.</string>
++    <string name="pref_livesync_summary">Subir en directo as posicións ao servidor. Require un URL do servidor válido.</string>
+     <string name="pref_autostart_title">Inicio automático</string>
+     <string name="pref_autostart_summary">A aplicación iniciará ao arrancar o sistema</string>
+     <string name="pref_external_title">Permitir ordes externas</string>
+@@ -81,7 +77,6 @@
+     <string name="unit_kilometer">km</string>
+     <string name="unit_mile">mi.</string>
+     <string name="provide_valid_url">Escribe un URL válido para o servidor</string>
+-    <string name="provide_user_pass_url">Primeiro debes escribir identificador, contrasinal e URL do servidor</string>
+     <string name="e_illegal_state">Erro de estado non permitido: %s</string>
+     <string name="e_illegal_redirect">Redirección non permitida: %d</string>
+     <string name="e_auth_failure">Fallou na autorización: %d</string>
+@@ -149,6 +144,5 @@
+     <string name="self_check_providers_title">Provedores de localización</string>
+     <string name="self_check_server_configured">Servidor configurado</string>
+     <string name="self_check_server_reachable">Servidor accesible</string>
+-    <string name="self_check_valid_server_account">Conta validada no servidor</string>
+     <string name="self_check_automated_usage">* Uso automatizado: iniciar a gravación sen precisar a interacción da usuaria desde unha aplicación externa ou inicio do sistema</string>
+ </resources>
+--- a/app/src/main/res/values-it/strings.xml
++++ b/app/src/main/res/values-it/strings.xml
+@@ -21,10 +21,6 @@
+     <string name="submit">Invia</string>
+     <string name="ok">OK</string>
+     <string name="settings">Impostazioni</string>
+-    <string name="pref_username_title">Nome utente</string>
+-    <string name="pref_username_summary">Nome utente sul server remoto</string>
+-    <string name="pref_pass_title">Password</string>
+-    <string name="pref_pass_summary">Password dell’utente sul server remoto</string>
+     <string name="pref_host_title">Indirizzo URL del server</string>
+     <string name="pref_host_summary">Indirizzo URL base del server remoto</string>
+     <string name="pref_mintime_title">Intervallo di aggiornamento</string>
+@@ -36,7 +32,7 @@
+     <string name="pref_imagesize_title">Grandezza dell’immagine</string>
+     <string name="pref_imagesize_summary">Massime dimensioni delle immagini caricate in pixel. In caso di ridimensionamento dell’immagine, una copia verrà salvata nella cartella dell’applicazione. Se scegli l’opzione “dimensioni effettive”, non ne verrà fatta una copia, dunque i file originali dovranno essere disponibili al momento dell’upload.</string>
+     <string name="pref_livesync_title">Sincronizzazione live</string>
+-    <string name="pref_livesync_summary">Caricamento continuo (live) delle posizioni al server. Richiede il nome utente, password e l’indirizzo del server.</string>
++    <string name="pref_livesync_summary">Caricamento continuo (live) delle posizioni al server. Richiede l’indirizzo del server.</string>
+     <string name="pref_autostart_title">Avvio automatico</string>
+     <string name="pref_autostart_summary">L’applicazione sì avvierà all’accensione del dispositivo</string>
+     <string name="pref_external_title">Consenti comandi esterni</string>
+@@ -82,7 +78,6 @@
+     <string name="unit_kilometer">km</string>
+     <string name="unit_mile">miglia</string>
+     <string name="provide_valid_url">Inserisci un URL valido</string>
+-    <string name="provide_user_pass_url">Perfavore inserisci nome utente, password e indirizzo del server prima</string>
+     <string name="e_illegal_state">Errore stato illegale: %s</string>
+     <string name="e_illegal_redirect">Reindirizzamento illegale: %d</string>
+     <string name="e_auth_failure">Errore di autorizzazione: %d</string>
+--- a/app/src/main/res/values-ja/strings.xml
++++ b/app/src/main/res/values-ja/strings.xml
+@@ -20,10 +20,6 @@
+     <string name="submit">送信</string>
+     <string name="ok">OK</string>
+     <string name="settings">設定</string>
+-    <string name="pref_username_title">ユーザー名</string>
+-    <string name="pref_username_summary">リモートサーバーのユーザーログイン</string>
+-    <string name="pref_pass_title">パスワード</string>
+-    <string name="pref_pass_summary">リモートサーバーのユーザーパスワード</string>
+     <string name="pref_host_title">サーバー URL</string>
+     <string name="pref_host_summary">リモートサーバーのベース URL</string>
+     <string name="pref_mintime_title">最小時間</string>
+@@ -33,7 +29,7 @@
+     <string name="pref_minaccuracy_title">最小精度</string>
+     <string name="pref_minaccuracy_summary">場所の最小精度</string>
+     <string name="pref_livesync_title">ライブ同期</string>
+-    <string name="pref_livesync_summary">場所のサーバーへのライブアップロード。 有効なユーザー名、パスワード、サーバー URL が必要です。</string>
++    <string name="pref_livesync_summary">場所のサーバーへのライブアップロード。 有効なサーバー URL が必要です。</string>
+     <string name="pref_autostart_title">自動開始</string>
+     <string name="pref_autostart_summary">システム起動時にアプリケーションが開始します</string>
+     <string name="pref_provider_title">位置プロバイダー</string>
+@@ -71,7 +67,6 @@
+     <string name="unit_kilometer">km</string>
+     <string name="unit_mile">mi.</string>
+     <string name="provide_valid_url">正しいサーバー URL を入力してください</string>
+-    <string name="provide_user_pass_url">まずユーザー、パスワード、サーバー URL を入力してください</string>
+     <string name="e_illegal_redirect">不正なリダイレクト: %d</string>
+     <string name="e_auth_failure">認証に失敗: %d</string>
+     <string name="e_http_code">HTTP エラーコード: %d</string>
+--- a/app/src/main/res/values-pl/strings.xml
++++ b/app/src/main/res/values-pl/strings.xml
+@@ -21,10 +21,6 @@
+     <string name="submit">Zatwierdź</string>
+     <string name="ok">OK</string>
+     <string name="settings">Ustawienia</string>
+-    <string name="pref_username_title">Nazwa użytkownika</string>
+-    <string name="pref_username_summary">Nazwa użytkownika na serwerze</string>
+-    <string name="pref_pass_title">Hasło</string>
+-    <string name="pref_pass_summary">Hasło użytkownika na serwerze</string>
+     <string name="pref_host_title">Adres serwera</string>
+     <string name="pref_host_summary">Adres zdalnego serwera</string>
+     <string name="pref_mintime_title">Minimalny czas</string>
+@@ -36,7 +32,7 @@
+     <string name="pref_imagesize_title">Rozmiar zdjęcia</string>
+     <string name="pref_imagesize_summary">Maksymalna wysokość/szerokość przesyłanych zdjęć. W przypadku zmniejszania rozmiaru, kopia obrazu przed wysłaniem będzie przechowywana tymczasowo w folderze aplikacji. W przypadku wybrania opcji „bez zmian”, oryginalny plik musi być dostępny podczas synchronizacji, ponieważ kopia obrazu nie jest tworzona.</string>
+     <string name="pref_livesync_title">Ciągła synchronizacja</string>
+-    <string name="pref_livesync_summary">Wysyłanie pozycji na serwer w czasie rzeczywistym. Wymaga podania użytkownika, hasła i adresu serwera.</string>
++    <string name="pref_livesync_summary">Wysyłanie pozycji na serwer w czasie rzeczywistym. Wymaga podania adresu serwera.</string>
+     <string name="pref_autostart_title">Auto start</string>
+     <string name="pref_autostart_summary">Aplikacja zostanie uruchomiona przy starcie systemu</string>
+     <string name="pref_external_title">Zezwalaj na sterowanie</string>
+@@ -83,7 +79,6 @@
+     <string name="unit_kilometer">km</string>
+     <string name="unit_mile">mi</string>
+     <string name="provide_valid_url">Podaj poprawny adres serwera</string>
+-    <string name="provide_user_pass_url">Najpierw uzupełnij nazwę użytkownika, hasło i adres serwera</string>
+     <string name="e_illegal_state">Błędny stan: %s</string>
+     <string name="e_illegal_redirect">Błąd przekierowania: %d</string>
+     <string name="e_auth_failure">Błąd autoryzacji: %d</string>
+@@ -153,6 +148,5 @@
+     <string name="self_check_providers_title">Usługi lokalizacji</string>
+     <string name="self_check_server_configured">Konfiguracja serwera</string>
+     <string name="self_check_server_reachable">Dostępność serwera</string>
+-    <string name="self_check_valid_server_account">Aktywne konto na serwerze</string>
+     <string name="self_check_automated_usage">*Automatyzacja: uruchamianie logowania bez udziału użytkownika, z innej aplikacji lub przy starcie systemu</string>
+ </resources>
+--- a/app/src/main/res/values-pt-rBR/strings.xml
++++ b/app/src/main/res/values-pt-rBR/strings.xml
+@@ -21,10 +21,6 @@
+     <string name="submit">Enviar</string>
+     <string name="ok">OK</string>
+     <string name="settings">Configurações</string>
+-    <string name="pref_username_title">Nome de usuário</string>
+-    <string name="pref_username_summary">Login de usuário no servidor remoto</string>
+-    <string name="pref_pass_title">Senha</string>
+-    <string name="pref_pass_summary">Senha de usuário no servidor remoto</string>
+     <string name="pref_host_title">URL do servidor</string>
+     <string name="pref_host_summary">URL base do servidor remoto</string>
+     <string name="pref_mintime_title">Tempo mínimo</string>
+@@ -36,7 +32,7 @@
+     <string name="pref_imagesize_title">Tamanho de imagem</string>
+     <string name="pref_imagesize_summary">Largura/altura máxima de imagens carregadas em píxeis. Quando a imagem for redimensionada para reduzir o tamanho a cópia será temporariamente armazenada em pasta do app antes de ser enviada. Se você escolher a opção "tamanho real", nenhuma cópia será feita, por isto os arquivos originais devem estar disponíveis durante o envio.</string>
+     <string name="pref_livesync_title">Sincronização em tempo real</string>
+-    <string name="pref_livesync_summary">Envio  de posições em tempo real ao servidor. Requer nome de usuário, senha e a URL do servidor.</string>
++    <string name="pref_livesync_summary">Envio  de posições em tempo real ao servidor. Requer a URL do servidor.</string>
+     <string name="pref_autostart_title">Iniciar automaticamente</string>
+     <string name="pref_autostart_summary">O app será executado na inicialização do sistema</string>
+     <string name="pref_external_title">Permitir comandos externos</string>
+@@ -82,7 +78,6 @@
+     <string name="unit_kilometer">km</string>
+     <string name="unit_mile">mi.</string>
+     <string name="provide_valid_url">Por favor, digite a URL do servidor válida</string>
+-    <string name="provide_user_pass_url">Por favor, digite primeiro o usuário, a senha e a URL do servidor</string>
+     <string name="e_illegal_state">Erro do estado: %s</string>
+     <string name="e_illegal_redirect">Erro de redirecionamento: %d</string>
+     <string name="e_auth_failure">Erro de autorização: %d</string>
+--- a/app/src/main/res/values-ru/strings.xml
++++ b/app/src/main/res/values-ru/strings.xml
+@@ -21,10 +21,6 @@
+     <string name="submit">Отправить</string>
+     <string name="ok">ОК</string>
+     <string name="settings">Настройки</string>
+-    <string name="pref_username_title">Имя пользователя</string>
+-    <string name="pref_username_summary">Имя пользователя на удаленном сервере</string>
+-    <string name="pref_pass_title">Пароль</string>
+-    <string name="pref_pass_summary">Пароль на удаленном сервере</string>
+     <string name="pref_host_title">Адрес сервера</string>
+     <string name="pref_host_summary">Ссылка на удаленный сервер</string>
+     <string name="pref_mintime_title">Минимальное время</string>
+@@ -36,7 +32,7 @@
+     <string name="pref_imagesize_title">Размер изображения</string>
+     <string name="pref_imagesize_summary">Максимальная ширина/высота загружаемых изображений в пикселях. В случае понижающей дискретизации копия изображения с измененным размером будет временно сохранена в папке приложения перед загрузкой. Если вы выберете опцию «Фактический размер», копии не будут созданы, поэтому исходные файлы должны быть доступны во время загрузки.</string>
+     <string name="pref_livesync_title">Синхронизация в реальном времени</string>
+-    <string name="pref_livesync_summary">Для синхронизация с сервером в реальном времени необходимо указать действительное имя пользователя, пароль и гиперссылку на сервер.</string>
++    <string name="pref_livesync_summary">Для синхронизация с сервером в реальном времени необходимо указать действительную гиперссылку на сервер.</string>
+     <string name="pref_autostart_title">Автоматический старт</string>
+     <string name="pref_autostart_summary">Приложение будет запускаться при загрузке системы</string>
+     <string name="pref_external_title">Разрешить внешнее управление</string>
+@@ -83,7 +79,6 @@
+     <string name="unit_kilometer">км</string>
+     <string name="unit_mile">мили</string>
+     <string name="provide_valid_url">Пожалуйста укажите действительную ссылку на сервер</string>
+-    <string name="provide_user_pass_url">Пожалуйста, сначала введите имя пользователя, пароль и ссылку на сервер. </string>
+     <string name="e_illegal_state">Ошибка, недопустимое значение: %s</string>
+     <string name="e_illegal_redirect">Неправильная переадресация: %d</string>
+     <string name="e_auth_failure">Ошибка авторизации: %d</string>
+--- a/app/src/main/res/values-sk/strings.xml
++++ b/app/src/main/res/values-sk/strings.xml
+@@ -20,10 +20,6 @@
+     <string name="submit">Poslať</string>
+     <string name="ok">OK</string>
+     <string name="settings">Nastavenia</string>
+-    <string name="pref_username_title">Používateľské meno</string>
+-    <string name="pref_username_summary">Používateľ na vzdialenom servery</string>
+-    <string name="pref_pass_title">Heslo</string>
+-    <string name="pref_pass_summary">Heslo na vzdialenom servery</string>
+     <string name="pref_host_title">URL servera</string>
+     <string name="pref_host_summary">Základná URL vzdialeného servera</string>
+     <string name="pref_mintime_title">Minimálny čas</string>
+@@ -35,7 +31,7 @@
+     <string name="pref_imagesize_title">Veľkosť obrázka</string>
+     <string name="pref_imagesize_summary">Maximálna šírka/výška nahrávaného obrázka v pixeloch. V prípade zmenšenia budú zmenšené obrázky pred nahratím dočasne uložené v priečinku aplikácie. Ak vyberiete \"skutočnú veľkosť\" neuloží sa žiadna dočasná kópia, takže originálne súbory musia byť počas nahrávania k dispozícii.</string>
+     <string name="pref_livesync_title">Live synchronizácia</string>
+-    <string name="pref_livesync_summary">Okamžité nahrávanie polohy na server. Vyžaduje platné prihlasovacie údaje a adresu servera.</string>
++    <string name="pref_livesync_summary">Okamžité nahrávanie polohy na server. Vyžaduje platnú adresu servera.</string>
+     <string name="pref_autostart_title">Spustiť automaticky</string>
+     <string name="pref_autostart_summary">Aplikácia sa spustí pri štarte systému</string>
+     <string name="pref_external_title">Povoliť externé príkazy</string>
+@@ -82,7 +78,6 @@
+     <string name="unit_kilometer">km</string>
+     <string name="unit_mile">mi.</string>
+     <string name="provide_valid_url">Prosím, zadajte platnú URL adresu.</string>
+-    <string name="provide_user_pass_url">Prosím, najskôr zadajte meno používateľa, heslo a adresu servera</string>
+     <string name="e_illegal_state">Chyba nepovoleného stavu: %s</string>
+     <string name="e_illegal_redirect">Nepovolené presmerovanie: %d</string>
+     <string name="e_auth_failure">Prihlásenie sa nepodarilo: %d</string>
+--- a/app/src/main/res/values-zh-rCN/strings.xml
++++ b/app/src/main/res/values-zh-rCN/strings.xml
+@@ -21,10 +21,6 @@
+     <string name="submit">提交</string>
+     <string name="ok">确定</string>
+     <string name="settings">设置</string>
+-    <string name="pref_username_title">用户名</string>
+-    <string name="pref_username_summary">远程服务器上的用户登录名</string>
+-    <string name="pref_pass_title">密码</string>
+-    <string name="pref_pass_summary">远程服务器上的用户密码</string>
+     <string name="pref_host_title">服务器 URL</string>
+     <string name="pref_host_summary">远程服务器的基本 URL</string>
+     <string name="pref_mintime_title">最短时间</string>
+@@ -36,7 +32,7 @@
+     <string name="pref_imagesize_title">图像大小</string>
+     <string name="pref_imagesize_summary">上传图像的最大宽度/高度（以像素为单位）。如果需要降采样，调整大小的图像副本将在上传前临时存储在应用程序文件夹中。如果选择“实际大小”选项，则不会创建副本，因此在上传期间必须提供原始文件。</string>
+     <string name="pref_livesync_title">实时同步</string>
+-    <string name="pref_livesync_summary">实时上传位置到服务器。需要有效的用户名、密码和服务器 URL。</string>
++    <string name="pref_livesync_summary">实时上传位置到服务器。需要有效的服务器 URL。</string>
+     <string name="pref_autostart_title">自动启动</string>
+     <string name="pref_autostart_summary">应用程序将在系统启动时启动</string>
+     <string name="pref_external_title">允许外部命令</string>
+@@ -80,7 +76,6 @@
+     <string name="unit_kilometer">公里</string>
+     <string name="unit_mile">英里</string>
+     <string name="provide_valid_url">请提供有效的服务器 URL</string>
+-    <string name="provide_user_pass_url">请先输入用户、密码和服务器 URL</string>
+     <string name="e_illegal_state">非法状态错误：%s</string>
+     <string name="e_illegal_redirect">非法重定向：%d</string>
+     <string name="e_auth_failure">授权失败：%d</string>
+@@ -149,6 +144,5 @@
+     <string name="self_check_providers_title">位置提供者</string>
+     <string name="self_check_server_configured">服务器已配置</string>
+     <string name="self_check_server_reachable">服务器可访问</string>
+-    <string name="self_check_valid_server_account">有效的服务器账号</string>
+     <string name="self_check_automated_usage">* 自动化使用：从外部应用程序或系统启动时无需用户交互即可开始记录</string>
+ </resources>
+--- a/app/src/main/res/values/strings.xml
++++ b/app/src/main/res/values/strings.xml
+@@ -23,10 +23,6 @@
+     <string name="submit">Submit</string>
+     <string name="ok">OK</string>
+     <string name="settings">Settings</string>
+-    <string name="pref_username_title">User name</string>
+-    <string name="pref_username_summary">User login on remote server</string>
+-    <string name="pref_pass_title">Password</string>
+-    <string name="pref_pass_summary">User password on remote server</string>
+     <string name="pref_host_title">Server URL</string>
+     <string name="pref_host_summary">Base URL of the remote server</string>
+     <string name="pref_mintime_title">Minimum time</string>
+@@ -42,7 +38,7 @@
+     <string name="pref_imagesize_summary">Maximum width/height of uploaded images in pixels. In case of downsampling resized image copy will be temporarily stored in application folder before uploading. If you choose “actual size” option no copy will be made, so original files must be available during uploading.</string>
+     <string name="pref_imagesize_default" translatable="false">800</string>
+     <string name="pref_livesync_title">Live synchronization</string>
+-    <string name="pref_livesync_summary">Live uploading of positions to the server. Requires valid user name, password and server URL.</string>
++    <string name="pref_livesync_summary">Live uploading of positions to the server. Requires valid server URL.</string>
+     <string name="pref_livesync_default" translatable="false">false</string>
+     <string name="pref_autostart_title">Auto start</string>
+     <string name="pref_autostart_summary">Application will start on system boot</string>
+@@ -94,7 +90,6 @@
+     <string name="unit_kilometer">km</string>
+     <string name="unit_mile">mi.</string>
+     <string name="provide_valid_url">Please provide valid server URL</string>
+-    <string name="provide_user_pass_url">Please enter user, password and server URL first</string>
+     <string name="e_illegal_state">Illegal state error: %s</string>
+     <string name="e_illegal_redirect">Illegal redirect: %d</string>
+     <string name="e_auth_failure">Authorization failure: %d</string>
+@@ -162,6 +157,5 @@
+     <string name="self_check_providers_title">Location providers</string>
+     <string name="self_check_server_configured">Server configured</string>
+     <string name="self_check_server_reachable">Server reachable</string>
+-    <string name="self_check_valid_server_account">Valid server account</string>
+     <string name="self_check_automated_usage">* Automated usage: starting logging without user interaction from external application or on system boot</string>
+ </resources>
+--- a/app/src/main/res/xml/preferences.xml
++++ b/app/src/main/res/xml/preferences.xml
+@@ -58,16 +58,6 @@
+     <PreferenceCategory
+         android:icon="@drawable/ic_cloud_upload_blue_24dp"
+         android:title="@string/pref_cat_server">
+-        <net.fabiszewski.ulogger.ui.TrimmedEditTextPreference
+-            android:dialogMessage="@string/pref_username_summary"
+-            android:key="prefUsername"
+-            android:title="@string/pref_username_title"
+-            app:useSimpleSummaryProvider="true" />
+-        <net.fabiszewski.ulogger.ui.PasswordPreference
+-            android:dialogMessage="@string/pref_pass_summary"
+-            android:key="prefPass"
+-            android:title="@string/pref_pass_title"
+-            app:useSimpleSummaryProvider="true" />
+         <net.fabiszewski.ulogger.ui.TrimmedEditTextPreference
+             android:dialogMessage="@string/pref_host_summary"
+             android:key="prefHost"

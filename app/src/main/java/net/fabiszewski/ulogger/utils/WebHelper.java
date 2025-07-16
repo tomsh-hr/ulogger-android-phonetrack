@@ -28,6 +28,10 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.preference.PreferenceManager;
 
+import android.content.Intent;
+import android.content.IntentFilter;
+import android.os.BatteryManager;
+
 import net.fabiszewski.ulogger.BuildConfig;
 import net.fabiszewski.ulogger.Logger;
 import net.fabiszewski.ulogger.R;
@@ -96,11 +100,10 @@ public class WebHelper {
     public static final String PARAM_COMMENT = "comment";
     public static final String PARAM_IMAGE = "image";
     public static final String PARAM_TRACKID = "trackid";
+    public static final String PARAM_BAT = "bat";
 
     // auth
     private static final String ACTION_AUTH = "auth";
-    private static final String PARAM_USER = "user";
-    private static final String PARAM_PASS = "pass";
 
     // addtrack
     private static final String ACTION_ADDTRACK = "addtrack";
@@ -395,6 +398,7 @@ public class WebHelper {
     public void postPosition(@NonNull Map<String, String> params) throws IOException, WebAuthException {
         if (Logger.DEBUG) { Log.d(TAG, "[postPosition]"); }
         params.put(PARAM_ACTION, ACTION_ADDPOS);
+        params.put(PARAM_BAT, getBatteryLevel(context));
         String response;
         Uri uri = null;
         if (params.containsKey(PARAM_IMAGE)) {
@@ -411,6 +415,13 @@ public class WebHelper {
         if (error) {
             throw new IOException(context.getString(R.string.e_server_response));
         }
+    }
+
+    private String getBatteryLevel(Context context) {
+        Intent batteryIntent = context.registerReceiver(null, new IntentFilter(Intent.ACTION_BATTERY_CHANGED));
+        int level = batteryIntent != null ? batteryIntent.getIntExtra(BatteryManager.EXTRA_LEVEL, -1) : -1;
+        int scale = batteryIntent != null ? batteryIntent.getIntExtra(BatteryManager.EXTRA_SCALE, -1) : -1;
+        return level >= 0 && scale > 0 ? String.valueOf((level * 100) / scale) : null;
     }
 
     /**
@@ -450,8 +461,6 @@ public class WebHelper {
         if (Logger.DEBUG) { Log.d(TAG, "[authorize]"); }
         Map<String, String> params = new HashMap<>();
         params.put(PARAM_ACTION, ACTION_AUTH);
-        params.put(PARAM_USER, user);
-        params.put(PARAM_PASS, pass);
         String response = postWithParams(params);
         JSONObject json = new JSONObject(response);
         boolean error = json.getBoolean("error");
@@ -551,8 +560,6 @@ public class WebHelper {
      */
     private static void loadPreferences(@NonNull Context context) {
         SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(context);
-        user = prefs.getString(SettingsActivity.KEY_USERNAME, "NULL");
-        pass = prefs.getString(SettingsActivity.KEY_PASS, "NULL");
         host = prefs.getString(SettingsActivity.KEY_HOST, "NULL").replaceAll("/+$", "");
     }
 

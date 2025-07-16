@@ -59,16 +59,6 @@
         android:icon="@drawable/ic_cloud_upload_blue_24dp"
         android:title="@string/pref_cat_server">
         <net.fabiszewski.ulogger.ui.TrimmedEditTextPreference
-            android:dialogMessage="@string/pref_username_summary"
-            android:key="prefUsername"
-            android:title="@string/pref_username_title"
-            app:useSimpleSummaryProvider="true" />
-        <net.fabiszewski.ulogger.ui.PasswordPreference
-            android:dialogMessage="@string/pref_pass_summary"
-            android:key="prefPass"
-            android:title="@string/pref_pass_title"
-            app:useSimpleSummaryProvider="true" />
-        <net.fabiszewski.ulogger.ui.TrimmedEditTextPreference
             android:dialogMessage="@string/pref_host_summary"
             android:key="prefHost"
             android:title="@string/pref_host_title"
