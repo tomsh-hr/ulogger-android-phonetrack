@@ -98,6 +98,7 @@ public class WebHelper {
     public static final String PARAM_ACCURACY = "accuracy";
     public static final String PARAM_PROVIDER = "provider";
     public static final String PARAM_COMMENT = "comment";
+    public static final String PARAM_TRACKID = "trackid";
     public static final String PARAM_BAT = "bat";
 
     // auth
@@ -302,25 +303,6 @@ public class WebHelper {
      * @param data Text part data
      * @return Length in bytes
      */
-    private long getMultipartLength(@NonNull Uri uri, @NonNull byte[] data) {
-        long length = 0;
-        String fileMime = ImageHelper.getFileMime(context, uri);
-        if (fileMime != null) {
-            // text part size
-            length += data.length;
-            // file size
-            long fileSize = ImageHelper.getFileSize(context, uri);
-            if (fileSize > 0) {
-                String headers = String.format(MULTIPART_FILE_TEMPLATE, PARAM_IMAGE, fileMime);
-                length += headers.getBytes(StandardCharsets.UTF_8).length + delimiter.length;
-                length += fileSize;
-            }
-            // closing delimiter
-            length += delimiter.length + 2;
-        }
-        if (Logger.DEBUG) { Log.d(TAG, "[getMultipartLength: " + length + "]"); }
-        return length;
-    }
 
     /**
      * Write uri to output stream.
@@ -329,35 +311,6 @@ public class WebHelper {
      * @param out Output stream
      * @param uri File uri
      */
-    private void writeMultipartFile(@NonNull OutputStream out, @NonNull Uri uri) {
-        ContentResolver cr = context.getContentResolver();
-        String fileMime = ImageHelper.getFileMime(context, uri);
-        if (fileMime == null) {
-            if (Logger.DEBUG) { Log.d(TAG, "[Skipping file, unknown mime type]"); }
-            return;
-        }
-        long fileSize = ImageHelper.getFileSize(context, uri);
-        if (fileSize <= 0) {
-            if (Logger.DEBUG) { Log.d(TAG, "[Skipping file, wrong size: " + fileSize + "]"); }
-            return;
-        }
-        try (InputStream fileStream = cr.openInputStream(uri)) {
-            if (fileStream == null) {
-                throw new IOException("InputStream is null");
-            }
-            out.write(delimiter);
-            String headers = String.format(MULTIPART_FILE_TEMPLATE, PARAM_IMAGE, fileMime);
-            out.write(headers.getBytes(StandardCharsets.UTF_8));
-
-            byte[] buffer = new byte[BUFFER_SIZE];
-            int len;
-            while ((len = fileStream.read(buffer)) > 0) {
-                out.write(buffer, 0, len);
-            }
-        } catch (IOException | OutOfMemoryError fileException) {
-            if (Logger.DEBUG) { Log.d(TAG, "[Skipping file, error: " + fileException + "]"); }
-        }
-    }
 
     /**
      * Get text/plain parameters as part of multipart form
@@ -399,9 +352,6 @@ public class WebHelper {
         params.put(PARAM_BAT, getBatteryLevel(context));
         String response;
         Uri uri = null;
-        if (params.containsKey(PARAM_IMAGE)) {
-            uri = Uri.parse(params.remove(PARAM_IMAGE));
-        }
         response = postForm(params, uri);
         boolean error = true;
         try {
