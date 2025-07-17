@@ -101,6 +101,10 @@ public class WebHelper {
     public static final String PARAM_BAT = "bat";
 
 
+    // addtrack
+    private static final String ACTION_ADDTRACK = "addtrack";
+    private static final String PARAM_TRACK = "track";
+
     private final String userAgent;
     private final Context context;
 
@@ -364,6 +368,26 @@ public class WebHelper {
      * @throws IOException Connection error
      * @throws WebAuthException Authorization error
      */
+    public int startTrack(@NonNull String name) throws IOException, WebAuthException {
+        if (Logger.DEBUG) { Log.d(TAG, "[startTrack: " + name + "]"); }
+        Map<String, String> params = new HashMap<>();
+        params.put(PARAM_ACTION, ACTION_ADDTRACK);
+        params.put(PARAM_TRACK, name);
+        try {
+            String response = postWithParams(params);
+            JSONObject json = new JSONObject(response);
+            boolean error = json.getBoolean("error");
+            if (error) {
+                throw new IOException(context.getString(R.string.e_server_response));
+            } else {
+                return json.getInt("trackid");
+            }
+        } catch (JSONException e) {
+            if (Logger.DEBUG) { Log.d(TAG, "[startTrack json failed: " + e + "]"); }
+            throw new IOException(e);
+        }
+    }
+
 
     /**
      * Ping server without authorization
