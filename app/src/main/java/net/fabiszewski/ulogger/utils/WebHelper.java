@@ -298,14 +298,6 @@ public class WebHelper {
      */
 
     /**
-     * Write uri to output stream.
-     * File name and extension is ignored, only MIME type is sent.
-     * Errors are not propagated to allow skipping problematic file and sending only position.
-     * @param out Output stream
-     * @param uri File uri
-     */
-
-    /**
      * Get text/plain parameters as part of multipart form
      * @param params Parameters
      * @return Multipart body for text parameters
