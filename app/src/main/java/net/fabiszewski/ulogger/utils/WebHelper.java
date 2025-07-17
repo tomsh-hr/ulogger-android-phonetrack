@@ -98,7 +98,6 @@ public class WebHelper {
     public static final String PARAM_ACCURACY = "accuracy";
     public static final String PARAM_PROVIDER = "provider";
     public static final String PARAM_COMMENT = "comment";
-    public static final String PARAM_TRACKID = "trackid";
     public static final String PARAM_BAT = "bat";
 
     // auth
