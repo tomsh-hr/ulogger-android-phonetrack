@@ -100,12 +100,6 @@ public class WebHelper {
     public static final String PARAM_COMMENT = "comment";
     public static final String PARAM_BAT = "bat";
 
-    // auth
-    private static final String ACTION_AUTH = "auth";
-
-    // addtrack
-    private static final String ACTION_ADDTRACK = "addtrack";
-    private static final String PARAM_TRACK = "track";
 
     private final String userAgent;
     private final Context context;
@@ -378,69 +372,6 @@ public class WebHelper {
      * @throws IOException Connection error
      * @throws WebAuthException Authorization error
      */
-    public int startTrack(@NonNull String name) throws IOException, WebAuthException {
-        if (Logger.DEBUG) { Log.d(TAG, "[startTrack: " + name + "]"); }
-        Map<String, String> params = new HashMap<>();
-        params.put(PARAM_ACTION, ACTION_ADDTRACK);
-        params.put(PARAM_TRACK, name);
-        try {
-            String response = postWithParams(params);
-            JSONObject json = new JSONObject(response);
-            boolean error = json.getBoolean("error");
-            if (error) {
-                throw new IOException(context.getString(R.string.e_server_response));
-            } else {
-                return json.getInt("trackid");
-            }
-        } catch (JSONException e) {
-            if (Logger.DEBUG) { Log.d(TAG, "[startTrack json failed: " + e + "]"); }
-            throw new IOException(e);
-        }
-    }
-
-    /**
-     * Authorize on server
-     * @throws IOException Connection error
-     * @throws WebAuthException Authorization error
-     * @throws JSONException Response parsing error
-     */
-    public void authorize() throws IOException, WebAuthException, JSONException {
-        if (Logger.DEBUG) { Log.d(TAG, "[authorize]"); }
-        Map<String, String> params = new HashMap<>();
-        params.put(PARAM_ACTION, ACTION_AUTH);
-        String response = postWithParams(params);
-        JSONObject json = new JSONObject(response);
-        boolean error = json.getBoolean("error");
-        if (error) {
-            throw new WebAuthException(context.getString(R.string.e_server_response));
-        }
-        isAuthorized = true;
-    }
-
-    /**
-     * Remove authorization by removing session cookie
-     */
-    public static void deauthorize() {
-        if (Logger.DEBUG) { Log.d(TAG, "[deauthorize]"); }
-        if (cookieManager != null) {
-            CookieStore store = cookieManager.getCookieStore();
-            store.removeAll();
-        }
-        isAuthorized = false;
-    }
-
-    public void checkAuthorization() throws JSONException, IOException, WebAuthException {
-        boolean wasAuthorized = isAuthorized;
-        try {
-            authorize();
-            if (!wasAuthorized) {
-                deauthorize();
-            }
-        } catch (IOException | WebAuthException | JSONException e) {
-            if (Logger.DEBUG) { Log.d(TAG, "[isValidAccount exception: " + e + "]"); }
-            throw e;
-        }
-    }
 
     /**
      * Ping server without authorization
