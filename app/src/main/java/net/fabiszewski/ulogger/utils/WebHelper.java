@@ -98,8 +98,6 @@ public class WebHelper {
     public static final String PARAM_ACCURACY = "accuracy";
     public static final String PARAM_PROVIDER = "provider";
     public static final String PARAM_COMMENT = "comment";
-    public static final String PARAM_IMAGE = "image";
-    public static final String PARAM_TRACKID = "trackid";
     public static final String PARAM_BAT = "bat";
 
     // auth
@@ -419,14 +417,9 @@ public class WebHelper {
 
     private String getBatteryLevel(Context context) {
         Intent batteryIntent = context.registerReceiver(null, new IntentFilter(Intent.ACTION_BATTERY_CHANGED));
-        if (batteryIntent != null) {
-            int level = batteryIntent.getIntExtra(BatteryManager.EXTRA_LEVEL, -1);
-            int scale = batteryIntent.getIntExtra(BatteryManager.EXTRA_SCALE, -1);
-            if (level >= 0 && scale > 0) {
-                return String.valueOf((level * 100) / scale);
-            }
-        }
-        return "";
+        int level = batteryIntent != null ? batteryIntent.getIntExtra(BatteryManager.EXTRA_LEVEL, -1) : -1;
+        int scale = batteryIntent != null ? batteryIntent.getIntExtra(BatteryManager.EXTRA_SCALE, -1) : -1;
+        return level >= 0 && scale > 0 ? String.valueOf((level * 100) / scale) : null;
     }
 
     /**

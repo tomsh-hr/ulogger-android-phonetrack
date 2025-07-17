@@ -108,21 +108,7 @@ public class WebSyncService extends Service {
         public void handleMessage(@NonNull Message msg) {
             cancelPending();
 
-            if (!WebHelper.isAuthorized) {
-                try {
-                    web.authorize();
-                } catch (WebAuthException | IOException | JSONException e) {
-                    handleError(e);
-                    stopSelf(msg.arg1);
-                    return;
-                }
-            }
-
-            // get track id
-            int trackId = getTrackId();
-            if (trackId > 0) {
-                doSync(trackId);
-            }
+            doSync(0);
 
             stopSelf(msg.arg1);
         }
@@ -167,43 +153,6 @@ public class WebSyncService extends Service {
         return START_STICKY;
     }
 
-    /**
-     * Get track id
-     * If the track hasn't been registered on server yet,
-     * set up new track on the server and get new id
-     * @return Track id
-     */
-    private int getTrackId() {
-        int trackId = db.getTrackId();
-        if (trackId == 0) {
-            String trackName = db.getTrackName();
-            if (trackName == null) {
-                handleError(new IllegalStateException("no track"));
-                return trackId;
-            }
-            try {
-                trackId = web.startTrack(trackName);
-                db.setTrackId(trackId);
-            } catch (IOException e) {
-                if (Logger.DEBUG) { Log.d(TAG, "[getTrackId: io exception: " + e + "]"); }
-                // schedule retry
-                handleError(e);
-            } catch (WebAuthException e) {
-                if (Logger.DEBUG) { Log.d(TAG, "[getTrackId: auth exception: " + e + "]"); }
-                WebHelper.deauthorize();
-                try {
-                    // reauthorize and retry
-                    web.authorize();
-                    trackId = web.startTrack(trackName);
-                    db.setTrackId(trackId);
-                } catch (WebAuthException|IOException|JSONException e2) {
-                    // schedule retry
-                    handleError(e2);
-                }
-            }
-        }
-        return trackId;
-    }
 
     /**
      * Synchronize all positions in database.
@@ -217,7 +166,6 @@ public class WebSyncService extends Service {
             while (cursor.moveToNext()) {
                 int rowId = cursor.getInt(cursor.getColumnIndexOrThrow(DbContract.Positions._ID));
                 Map<String, String> params = cursorToMap(cursor);
-                params.put(WebHelper.PARAM_TRACKID, String.valueOf(trackId));
                 web.postPosition(params);
                 db.setSynced(getApplicationContext(), rowId);
                 BroadcastHelper.sendBroadcast(this, BROADCAST_SYNC_DONE);
@@ -232,15 +180,6 @@ public class WebSyncService extends Service {
         } catch (WebAuthException e) {
             if (Logger.DEBUG) {
                 Log.d(TAG, "[doSync: auth exception: " + e + "]");
-            }
-            WebHelper.deauthorize();
-            try {
-                // reauthorize and retry
-                web.authorize();
-                doSync(trackId);
-            } catch (WebAuthException | IOException | JSONException e2) {
-                // schedule retry
-                handleError(e2);
             }
         }
     }
@@ -327,29 +266,20 @@ public class WebSyncService extends Service {
     @NonNull
     private Map<String, String> cursorToMap(@NonNull Cursor cursor) {
         Map<String, String> params = new HashMap<>();
-        params.put(WebHelper.PARAM_TIME, DbAccess.getTime(cursor));
-        params.put(WebHelper.PARAM_LAT, DbAccess.getLatitude(cursor));
-        params.put(WebHelper.PARAM_LON, DbAccess.getLongitude(cursor));
+        params.put("timestamp", DbAccess.getTime(cursor));
+        params.put("lat", DbAccess.getLatitude(cursor));
+        params.put("lon", DbAccess.getLongitude(cursor));
         if (DbAccess.hasAltitude(cursor)) {
-            params.put(WebHelper.PARAM_ALT, DbAccess.getAltitude(cursor));
+            params.put("alt", DbAccess.getAltitude(cursor));
         }
         if (DbAccess.hasSpeed(cursor)) {
-            params.put(WebHelper.PARAM_SPEED, DbAccess.getSpeed(cursor));
+            params.put("speed", DbAccess.getSpeed(cursor));
         }
         if (DbAccess.hasBearing(cursor)) {
-            params.put(WebHelper.PARAM_BEARING, DbAccess.getBearing(cursor));
+            params.put("bearing", DbAccess.getBearing(cursor));
         }
         if (DbAccess.hasAccuracy(cursor)) {
-            params.put(WebHelper.PARAM_ACCURACY, DbAccess.getAccuracy(cursor));
-        }
-        if (DbAccess.hasProvider(cursor)) {
-            params.put(WebHelper.PARAM_PROVIDER, DbAccess.getProvider(cursor));
-        }
-        if (DbAccess.hasComment(cursor)) {
-            params.put(WebHelper.PARAM_COMMENT, DbAccess.getComment(cursor));
-        }
-        if (DbAccess.hasImageUri(cursor)) {
-            params.put(WebHelper.PARAM_IMAGE, DbAccess.getImageUri(cursor));
+            params.put("acc", DbAccess.getAccuracy(cursor));
         }
         return params;
     }
