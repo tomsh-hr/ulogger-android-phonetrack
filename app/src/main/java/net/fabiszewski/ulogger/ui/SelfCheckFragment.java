@@ -173,16 +173,6 @@ public class SelfCheckFragment extends Fragment implements PermissionHelper.Perm
             details = e.getLocalizedMessage();
         }
         postServerCheckResults(handler, serverReachableDetails, serverReachableSwitch, details, isReachable);
-        if (isReachable) {
-            boolean isValidAccount = false;
-            try {
-                webHelper.checkAuthorization();
-                isValidAccount = true;
-            } catch (IOException | WebAuthException | JSONException e) {
-                details = e.getLocalizedMessage();
-            }
-            postServerCheckResults(handler, validAccountDetails, validAccountSwitch, details, isValidAccount);
-        }
         handler.post(() -> setRefreshing(false));
     }
 
