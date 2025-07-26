@@ -8,11 +8,7 @@
   -->
 
 <resources xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2">
-    <string name="button_upload">Nahrať</string>
     <string name="is_running" comment="substituted app_name">%s je aktívna</string>
-    <string name="title_newtrack">Nová cesta</string>
-    <string name="label_track">Aktuálna cesta</string>
-    <string name="label_newtrack_name">Názov novej cesty</string>
     <string name="label_name">Názov</string>
     <string name="label_last_update">Naposledy aktualizované: %s</string>
     <string name="label_synchronized">Synchronizované</string>
@@ -32,14 +28,10 @@
     <string name="pref_mindistance_summary">Minimálna vzdialenosť medzi aktualizáciami polohy</string>
     <string name="pref_minaccuracy_title">Minimálna presnosť</string>
     <string name="pref_minaccuracy_summary">Minimálna presnosť polohy</string>
-    <string name="pref_imagesize_title">Veľkosť obrázka</string>
-    <string name="pref_imagesize_summary">Maximálna šírka/výška nahrávaného obrázka v pixeloch. V prípade zmenšenia budú zmenšené obrázky pred nahratím dočasne uložené v priečinku aplikácie. Ak vyberiete \"skutočnú veľkosť\" neuloží sa žiadna dočasná kópia, takže originálne súbory musia byť počas nahrávania k dispozícii.</string>
     <string name="pref_livesync_title">Live synchronizácia</string>
-    <string name="pref_livesync_summary">Okamžité nahrávanie polohy na server. Vyžaduje platné prihlasovacie údaje a adresu servera.</string>
+    <string name="pref_livesync_summary">Okamžité nahrávanie polohy na server.</string>
     <string name="pref_autostart_title">Spustiť automaticky</string>
     <string name="pref_autostart_summary">Aplikácia sa spustí pri štarte systému</string>
-    <string name="pref_external_title">Povoliť externé príkazy</string>
-    <string name="pref_external_summary">Povoliť prijímanie príkazov z iných aplikácií na automatizovanie a plánovanie úloh.</string>
     <string name="pref_provider_title">Poskytovateľ polohy</string>
     <string name="pref_provider_summary">Poloha môže byť poskytovaná cez GPS, cez sieť alebo cez oba zdroje. Oba poskytovatelia naraz dodávajú lepšie výsledky, ale vyžadujú viac energie baterky.</string>
     <string name="pref_units_title">Jednotky</string>
@@ -47,7 +39,6 @@
     <string name="pref_units_metric">Metrické</string>
     <string name="pref_units_imperial">Imperiálne</string>
     <string name="pref_units_nautical">Námornícke</string>
-    <string name="pref_auto_name_title">Šablóna názvu cesty</string>
     <string name="pref_auto_name_summary" formatted="false">Šablóna pre názov novej cesty. Tento vzorec bude nahradený aktuálnym dátumom takto: %y (rok), %m (mesiac), %d (deň), %H (hodina), %M (minúta), %S (sekunda). Ak potrebujete znak percenta, použite %%.</string>
     <string name="label_status">Stav</string>
     <string name="label_location">Poloha</string>
@@ -70,7 +61,6 @@
     <string name="about_license">Licencia: GPL</string>
     <string name="uploading_failed">Nahrávanie sa nepodarilo:</string>
     <string name="uploading_done">Nahrávanie dokončené</string>
-    <string name="track_summary">Zhrnutie cesty</string>
     <string name="summary_distance" comment="1-distance, 2-unit name">%1$s %2$s</string>
     <plurals name="summary_positions">
         <item quantity="one">%d miesto</item>
@@ -98,7 +88,6 @@
     <string name="using_network">Používa sa poskytovateľ siete</string>
     <string name="using_gps">Používa sa poskytovateľ GPS</string>
     <string name="export">Exportovať do GPX</string>
-    <string name="waypoint">Cieľové miesto</string>
     <string name="nothing_to_export">Nie je čo exportovať</string>
     <string name="export_done">Cesta sa úspešne zapísala</string>
     <string name="export_failed">Exportovanie sa nepodarilo</string>
@@ -114,7 +103,6 @@
     <string name="pref_mintime_other">Minimálny časový interval v sekundách</string>
     <string name="pref_mindistance_other">Minimálna vzdialenosť v metroch</string>
     <string name="pref_minaccuracy_other">Minimálna presnosť v metroch</string>
-    <string name="pref_imagesize_other">Minimálna šírka/výška v pixeloch</string>
     <string name="unit_nmile">nm</string>
     <string name="pref_cat_location">Sledovanie</string>
     <string name="pref_cat_server">Server</string>
@@ -131,10 +119,7 @@
     <string name="accuracy_meters">%d m presnosť</string>
     <string name="meters_asl">%s m n. m.</string>
     <string name="label_position">Poloha</string>
-    <string name="label_waypoint_description">Popis cieľového miesta</string>
     <string name="label_add_photo">Pridať fotku</string>
     <string name="button_save">Uložiť</string>
     <string name="tracking">Sledovanie</string>
-    <string name="clear">Vymazať cestu</string>
-    <string name="share_link">Zdielať odkaz na cestu</string>
     </resources>

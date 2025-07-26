@@ -184,51 +184,6 @@
             </LinearLayout>
 
             <LinearLayout
-                android:id="@+id/permissionStorageSelfCheck"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="15dp"
-                android:gravity="top"
-                android:orientation="horizontal"
-                android:visibility="gone"
-                tools:visibility="visible">
-
-                <LinearLayout
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:orientation="vertical">
-
-                    <TextView
-                        android:id="@+id/permissionStorageLabel"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_marginBottom="5dp"
-                        android:labelFor="@id/permissionStorageResult"
-                        android:textSize="18sp"
-                        tools:ignore="LabelFor"
-                        tools:text="Write external storage" />
-
-                    <TextView
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:text="@string/self_check_storage_rationale"
-                        android:textSize="12sp" />
-                </LinearLayout>
-
-                <androidx.appcompat.widget.SwitchCompat
-                    android:id="@+id/permissionStorageResult"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:focusable="false"
-                    android:gravity="top"
-                    android:minHeight="48dp"
-                    android:paddingStart="10dp"
-                    android:paddingTop="5dp"
-                    android:paddingEnd="10dp" />
-            </LinearLayout>
-
-            <LinearLayout
                 android:id="@+id/permissionNotificationsSelfCheck"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -467,51 +422,6 @@
 
                 <androidx.appcompat.widget.SwitchCompat
                     android:id="@+id/serverReachableResult"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:focusable="false"
-                    android:gravity="top"
-                    android:minHeight="48dp"
-                    android:paddingStart="10dp"
-                    android:paddingTop="5dp"
-                    android:paddingEnd="10dp" />
-
-            </LinearLayout>
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:gravity="top"
-                android:orientation="horizontal">
-
-                <LinearLayout
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:orientation="vertical">
-
-                    <TextView
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_marginBottom="5dp"
-                        android:labelFor="@id/validAccountResult"
-                        android:text="@string/self_check_valid_server_account"
-                        android:textSize="18sp" />
-
-                    <TextView
-                        android:id="@+id/validAccountDetails"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_marginBottom="5dp"
-                        android:textColor="@color/colorPink"
-                        android:textSize="12sp"
-                        android:visibility="gone"
-                        tools:text="Authorization failed: 401"
-                        tools:visibility="visible" />
-                </LinearLayout>
-
-                <androidx.appcompat.widget.SwitchCompat
-                    android:id="@+id/validAccountResult"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:focusable="false"

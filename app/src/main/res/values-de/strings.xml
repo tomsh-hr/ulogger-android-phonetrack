@@ -8,12 +8,8 @@
   -->
 
 <resources xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2">
-    <string name="button_upload">Upload</string>
     <string name="is_running" comment="substituted app_name">%s läuft</string>
     <string name="is_uploading" comment="substituted app_name">%s lädt Positionen hoch</string>
-    <string name="title_newtrack">Neuer Track</string>
-    <string name="label_track">Aktueller Track</string>
-    <string name="label_newtrack_name">Track-Name</string>
     <string name="label_name">Name</string>
     <string name="label_last_update">Letztes Update: %s</string>
     <string name="label_synchronized">Synchronisiert</string>
@@ -33,14 +29,10 @@
     <string name="pref_mindistance_summary">Mindeste Entfernung zwischen Positionen</string>
     <string name="pref_minaccuracy_title">Mindeste Genauigkeit</string>
     <string name="pref_minaccuracy_summary">Mindeste Genauigkeit der Positionen</string>
-    <string name="pref_imagesize_title">Bildgröße</string>
-    <string name="pref_imagesize_summary">Maximale Breite/Höhe des hochgeladenen Bildes in Pixeln. Ein evtl verkeinertes Bild wird vorübergehend im App-Ordner gespeichert. Wenn du \"tatsächliche Größe\" wählst, wird keine Kopie angelegt und die Originaldatei muss während des Uploads verfügbar sein.</string>
     <string name="pref_livesync_title">Live-Synchronisation</string>
-    <string name="pref_livesync_summary">Live-Synchronisation mit Server. Gültiger Server/Benutzername/Passwort erforderlich.</string>
+    <string name="pref_livesync_summary">Live-Synchronisation mit Server.</string>
     <string name="pref_autostart_title">Autostart</string>
     <string name="pref_autostart_summary">Applikation beim Booten starten</string>
-    <string name="pref_external_title">Aufrufe von dritten Applikation zulassen</string>
-    <string name="pref_external_summary">Aufrufe von dritten Applikation zulassen um Automatisierung und Planung zu erlauben.</string>
     <string name="pref_provider_title">Positionsquelle</string>
     <string name="pref_provider_summary">Position kann vom GPS, vom Netzwerk, oder von beiden ermittelt werden. Die Verwendung beider Positionsquellen liefert die besten Ergebnisse, aber benötigt mehr Batterie.</string>
     <string name="pref_units_title">Einheiten</string>
@@ -48,7 +40,6 @@
     <string name="pref_units_metric">Metrisch</string>
     <string name="pref_units_imperial">US-Meilen</string>
     <string name="pref_units_nautical">Nautisch</string>
-    <string name="pref_auto_name_title">Track Name Vorlage</string>
     <string name="pref_auto_name_summary" formatted="false">Vorlage für den Namen für neue Tracks. Die folgenden Platzhalter werden mit dem aktuellen Datum und der Zeit ersetzt: %y (Jahr), %m (Monat), %d (Tag), %H (Stunde), %M (Minute), %S (Sekunde). Für ein einfaches Prozentzeichen benutze %%.</string>
     <string name="label_status">Status</string>
     <string name="label_location">Position</string>
@@ -71,7 +62,6 @@
     <string name="about_license">Lizenz: GPL</string>
     <string name="uploading_failed">Upload fehlgeschlagen:</string>
     <string name="uploading_done">Upload erfolgreich</string>
-    <string name="track_summary">Track-Zusammenfassung</string>
     <string name="summary_distance" comment="1-distance, 2-unit name">%1$s %2$s</string>
     <plurals name="summary_positions">
         <item quantity="one">%d Position</item>
@@ -97,7 +87,6 @@
     <string name="using_network">Verwende Netzwerk-Provider als Positionsquelle</string>
     <string name="using_gps">Verwende GPS als Positionsquelle</string>
     <string name="export">Als GPX exportieren</string>
-    <string name="waypoint">Wegpunkt</string>
     <string name="nothing_to_export">Keine Daten zu exportieren</string>
     <string name="export_done">Track erfolgreich gespeichert</string>
     <string name="export_failed">Export fehlgeschlagen</string>
@@ -111,7 +100,6 @@
     <string name="pref_mintime_other">Mindester Zeitabstand in Sekunden</string>
     <string name="pref_mindistance_other">Mindestentfernung in Metern</string>
     <string name="pref_minaccuracy_other">Mindestgenauigkeit in Metern</string>
-    <string name="pref_imagesize_other">Maximale Bildbreite/-höhe in Pixeln</string>
     <string name="unit_nmile">sm</string>
     <string name="pref_cat_location">Positionsverfolgung</string>
     <string name="pref_cat_server">Server</string>
@@ -128,13 +116,9 @@
     <string name="accuracy_meters">%d m Genauigkeit</string>
     <string name="meters_asl">%s m ü. NN</string>
     <string name="label_position">Position</string>
-    <string name="label_waypoint_description">Beschreibung des Wegpunktes</string>
     <string name="label_add_photo">Foto hinzufügen</string>
     <string name="button_save">Speichern</string>
     <string name="tracking">Tracking</string>
-    <string name="clear">Track leeren</string>
-    <string name="share_link">Track Link teilen</string>
-    <string name="image_task_failed">Resampling des Fotos fehlgeschlagen</string>
     <string name="background_location_rationale">Die Berechtigung zum Standort-Zugriff im Hintergrund wird nur benötigt, wenn die Trackaufzeichnung ohne Benutzerinterkation gestartet wird: durch einen externen Aufruf oder wenn die Anwendung beim Booten automatisch gestartet wird. Für diese Funktionalität mußt Du im Standort-Berechtigungsdialog \"%s\" auswählen.\nWeiter zu den Berechtigungseinstellungen?</string>
     <string name="background_location_required">Berechtigung für Standort-Zugriff im Hintergrund benötigt</string>
     </resources>

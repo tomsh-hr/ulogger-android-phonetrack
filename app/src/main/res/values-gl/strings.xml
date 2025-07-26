@@ -8,12 +8,8 @@
   -->
 
 <resources xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2">
-    <string name="button_upload">Subir</string>
     <string name="is_running" comment="substituted app_name">%s está a funcionar</string>
     <string name="is_uploading" comment="substituted app_name">%s está subindo posicións</string>
-    <string name="title_newtrack">Nova pista</string>
-    <string name="label_track">Pista actual</string>
-    <string name="label_newtrack_name">Novo nome da pista</string>
     <string name="label_name">Nome</string>
     <string name="label_last_update">Última actualización: %s</string>
     <string name="label_synchronized">Sincronizado</string>
@@ -33,14 +29,10 @@
     <string name="pref_mindistance_summary">Distancia mínima entre actualizacións da posición</string>
     <string name="pref_minaccuracy_title">Precisión mínima</string>
     <string name="pref_minaccuracy_summary">Precisión mínima da posición</string>
-    <string name="pref_imagesize_title">Tamaño da imaxe</string>
-    <string name="pref_imagesize_summary">Ancho/Alto máximo en píxeles para as imaxes subidas. En caso de reducilas gárdase no cartafol da aplicación unha copia temporal antes de subila. Se elixes a opción \"tamaño real\" entón non se fará copia, polo que os ficheiros orixinais deben estar dispoñibles para subilos.</string>
     <string name="pref_livesync_title">Sincronización en directo</string>
-    <string name="pref_livesync_summary">Subir en directo as posicións ao servidor. Require un identificador válido, contrasinal e URL do servidor.</string>
+    <string name="pref_livesync_summary">Subir en directo as posicións ao servidor.</string>
     <string name="pref_autostart_title">Inicio automático</string>
     <string name="pref_autostart_summary">A aplicación iniciará ao arrancar o sistema</string>
-    <string name="pref_external_title">Permitir ordes externas</string>
-    <string name="pref_external_summary">Permite recibir ordes desde outras aplicacións para facilitar a automatización e programar tarefas.</string>
     <string name="pref_provider_title">Provedor de localización</string>
     <string name="pref_provider_summary">A localización pode proporcionala o provedor GPS, a rede ou os dous. Actuando en conxunto darán mellores resultados, pero usarán máis batería.</string>
     <string name="pref_units_title">Unidades</string>
@@ -48,7 +40,6 @@
     <string name="pref_units_metric">Métrico</string>
     <string name="pref_units_imperial">Imperial</string>
     <string name="pref_units_nautical">Náutico</string>
-    <string name="pref_auto_name_title">Modelo do nome da ruta</string>
     <string name="pref_auto_name_summary" formatted="false">Modelo para dar nome á ruta. Os seguintes elementos serán substituídos por partes reais da data: %y (ano), %m (mes), %d (día), %H (hora), %M (minuto), %S (segundo). Se precisas usar o caracter de porcentaxe usa %%.</string>
     <string name="label_status">Estado</string>
     <string name="label_location">Localización</string>
@@ -71,7 +62,6 @@
     <string name="about_license">Licenza: GPL</string>
     <string name="uploading_failed">Fallou a subida:</string>
     <string name="uploading_done">Subida completada</string>
-    <string name="track_summary">Resumo da ruta</string>
     <string name="summary_distance" comment="1-distance, 2-unit name">%1$s %2$s</string>
     <plurals name="summary_positions">
         <item quantity="one">%d posición</item>
@@ -97,7 +87,6 @@
     <string name="using_network">Usar provedor de rede</string>
     <string name="using_gps">Usar provedor GPS</string>
     <string name="export">Exportar a GPX</string>
-    <string name="waypoint">Punto de interese</string>
     <string name="nothing_to_export">Nada que exportar</string>
     <string name="export_done">Ruta gardada correctamente</string>
     <string name="export_failed">Fallou a exportación</string>
@@ -111,7 +100,6 @@
     <string name="pref_mintime_other">Tempo mínimo para o intervalo en segundos</string>
     <string name="pref_mindistance_other">Distancia mínima en metros</string>
     <string name="pref_minaccuracy_other">Precisión mínima en metros</string>
-    <string name="pref_imagesize_other">Tamaño máximo da imaxe en píxeles ancho/alto</string>
     <string name="unit_nmile">nm</string>
     <string name="pref_cat_location">Gravando</string>
     <string name="pref_cat_server">Servidor</string>
@@ -128,20 +116,15 @@
     <string name="accuracy_meters">precisión %d m</string>
     <string name="meters_asl">%s m s.n.m.</string>
     <string name="label_position">Posición</string>
-    <string name="label_waypoint_description">Descrición do punto de interese</string>
     <string name="label_add_photo">Engadir foto</string>
     <string name="button_save">Gardar</string>
     <string name="tracking">Gravando</string>
-    <string name="clear">Limpar ruta</string>
-    <string name="share_link">Compartir ligazón da ruta</string>
-    <string name="image_task_failed">Fallou o escalado da imaxe</string>
     <string name="background_location_rationale">Só se precisa o permiso de localización en segundo plano cando a gravación se inicia sen interacción da usuaria: a través de ordes externas ou cando a aplicación se inicia automáticamente ao iniciar o sistema.\nPara que isto funcione debes escoller a opción \"%s\" no diálogo de permiso de localización.\nQueres conceder o permiso?</string>
     <string name="background_location_required">Requírese o permiso de localización en segundo plano</string>
     <string name="label_self_check">Auto-comprobación</string>
     <string name="self_check_approximate_location_rationale">Requerido. Sen este permiso a aplicación non poderá obter a localización</string>
     <string name="self_check_precise_location_rationale">Optativo. Hai que activalo para usar a localización precisa do GPS</string>
     <string name="self_check_background_location_rationale">Optativo. Requerido só se a aplicación se inicia de xeito automático*</string>
-    <string name="self_check_storage_rationale">Optativo. Só preciso se queres adxuntar imaxes da cámara aos puntos de interese.</string>
     <string name="self_check_notifications_rationale">Optativo. Se o permites recibirás unha notificación cando a aplicación funcione en segundo plano.</string>
     <string name="self_check_battery_unrestricted_rationale">Optativo. É moi recomendable para a fiabilidade. Se non o permites o sistema podería deter a apliación mentras funciona en segundo plano para poder aforrar batería. Requerido para uso automatizado*</string>
     <string name="self_check_battery_unrestricted_title">Uso da batería sen restricións</string>

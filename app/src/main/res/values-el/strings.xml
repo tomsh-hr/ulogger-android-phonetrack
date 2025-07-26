@@ -8,12 +8,8 @@
   -->
 
 <resources xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2">
-    <string name="button_upload">Αποστολή</string>
     <string name="is_running" comment="substituted app_name">%s εκτελείται</string>
     <string name="is_uploading" comment="substituted app_name">Ο %sαποστέλλει θέσεις</string>
-    <string name="title_newtrack">Καινούρια διαδρομή</string>
-    <string name="label_track">Τρέχουσα διαδρομή</string>
-    <string name="label_newtrack_name">Όνομα νέας διαδρομής</string>
     <string name="label_name">Όνομα</string>
     <string name="label_last_update">Τελευταία ανανέωση %s</string>
     <string name="label_synchronized">Συγχρονίστηκε</string>
@@ -33,14 +29,10 @@
     <string name="pref_mindistance_summary">Ελάχιστη απόσταση μεταξύ των ανανεώσεων θέσης</string>
     <string name="pref_minaccuracy_title">Ελάχιστη ακρίβεια</string>
     <string name="pref_minaccuracy_summary">Ελάχιστη ακρίβεια θέσης</string>
-    <string name="pref_imagesize_title">Μέγεθος εικόνας</string>
-    <string name="pref_imagesize_summary">Μέγιστο πλάτος/ύψος της αποσταλείσας  εικόνας σε πίξελ. Σε περίπτωση σμίκρυνσης, ένα αναδιαστασιολογημένο αντίγραφο θα αποθηκευθεί προσωρινά στο φάκελο της εφαρμογής πριν την αποστολή. Αν επιλέξετε \"πραγματικό μέγεθος\", δεν θα δημιουργηθεί αντίγραφο, δια τούτου τα αρχικά αρχεία θα πρέπει να διατίθενται κατά την αποστολή.</string>
     <string name="pref_livesync_title">Συγχρονισμός σε πραγματικό χρόνο</string>
-    <string name="pref_livesync_summary">Αποστολή σε πραγματικό χρόνο των θέσεων στον διακομιστή.Απαιτεί έγκυρο Όνομα Χρήστη, κωδικό και URL του διακομιστή.</string>
+    <string name="pref_livesync_summary">Αποστολή σε πραγματικό χρόνο των θέσεων στον διακομιστή.</string>
     <string name="pref_autostart_title">Αυτόματη εκκίνηση</string>
     <string name="pref_autostart_summary">Η εφαρμογή θα εκκινηθεί κατά την εκκίνηση του συστήματος</string>
-    <string name="pref_external_title">Επιτρέψτε εξωτερικές εντολές</string>
-    <string name="pref_external_summary">Επιτρέψτε τη λήψη εντολών από άλλες εφαρμογές προς διευκόλυνση της αυτοματοποίησης και προσχεδιασμένων δράσεων.</string>
     <string name="pref_provider_title">Πάροχος Θέσης</string>
     <string name="pref_provider_summary">Η θέση σας μπορεί να παρέχεται από το GPS, το δίκτυο ή και τα δύο. Έκαστο παρέχει καλό αποτέλεσμα, αλλά καταναλώνει περισσότερη μπαταρία.</string>
     <string name="pref_units_title">Μονάδες</string>
@@ -48,7 +40,6 @@
     <string name="pref_units_metric">Μετρικό</string>
     <string name="pref_units_imperial">Αυτοκρατορικό</string>
     <string name="pref_units_nautical">Ναυτικό</string>
-    <string name="pref_auto_name_title">Πρότυπο ονόματος διαδρομής</string>
     <string name="pref_auto_name_summary" formatted="false">Πρότυπο ονόματος νέας διαδρομής. Τα ακόλουθα μοτίβα θα υποκαθιστώνται ως εξής: %y (έτος), %m (μήνας), %d (ημέρα), %H (ώρα), %M (λεπτό), %S (δευτερόλεπτο). Αν χρειάζεστε μεγαλύτερη ακρίβεια %%.</string>
     <string name="label_status">Κατάσταση</string>
     <string name="label_location">Θέση</string>
@@ -71,7 +62,6 @@
     <string name="about_license">Τύπος αδείας: GPL</string>
     <string name="uploading_failed">Η αποστολή απέτυχε:</string>
     <string name="uploading_done">Η αποστολή τελείωσε</string>
-    <string name="track_summary">Σύνοψη διαδρομής</string>
     <string name="summary_distance" comment="1-distance, 2-unit name">%1$s %2$s</string>
     <plurals name="summary_positions">
         <item quantity="one">%d θέση</item>
@@ -97,7 +87,6 @@
     <string name="using_network">Χρήση  παρόχου δικτύου</string>
     <string name="using_gps">Χρήση παρόχου GPS</string>
     <string name="export">Εξαγωγή σε GPX</string>
-    <string name="waypoint">Γεωγραφικό σημείο</string>
     <string name="nothing_to_export">Τίποτα προς εξαγωγήν</string>
     <string name="export_done">Η διαδρομή αποθηκεύτηκε επιτυχώς</string>
     <string name="export_failed">Η εξαγωγή απέτυχε</string>
@@ -111,7 +100,6 @@
     <string name="pref_mintime_other">Ελάχιστο χρονικό διάστημα σε δευτερόλεπτα</string>
     <string name="pref_mindistance_other">Ελάχιστη απόσταση σε μέτρα</string>
     <string name="pref_minaccuracy_other">Ελάχιστη ακρίβεια θέσης σε μέτρα</string>
-    <string name="pref_imagesize_other">Μέγιστο μήκος/ύψος σε πίξελ</string>
     <string name="unit_nmile">νμ</string>
     <string name="pref_cat_location">Καταγραφή σε εξέλιξη…</string>
     <string name="pref_cat_server">Διακομιστής</string>
@@ -128,13 +116,9 @@
     <string name="accuracy_meters">%dμ. ακρίβεια</string>
     <string name="meters_asl">%sμ. a.s.l.</string>
     <string name="label_position">Θέση</string>
-    <string name="label_waypoint_description">Περιγραφή γεωγραφικού σημείου</string>
     <string name="label_add_photo">Προσθήκη φωτογραφίας</string>
     <string name="button_save">Αποθήκευση</string>
     <string name="tracking">Καταγραφή σε εξέλιξη…</string>
-    <string name="clear">Εξάλειψη διαδρομής</string>
-    <string name="share_link">Κοινή χρήση της διαδρομής</string>
-    <string name="image_task_failed">Αποτυχία αναμορφοποίησης εικόνας</string>
     <string name="background_location_rationale">Η έγκριση για εύρεση Θέσης στο παρασκήνιο απαιτείται μόνο όταν η καταγραφή έχει ξεκινήσει χωρίς άμεση ενέργεια του Χρήστη: Μέσω εξωτερικής εντολής ή αυτόματης εκτέλεσης κατά την εκκίνηση.\nΓια να λειτουργήσει αυτή η δυνατότητα, πρέπει να επιλέξετε \"%s\" στο ερώτημα για την άδεια.\nΣυνέχεια στις αδειοδοτήσεις της εφαρμογής;</string>
     <string name="background_location_required">Απαιτείται έγκριση για εύρεση Θέσης στο παρασκήνιο</string>
     </resources>

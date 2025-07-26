@@ -8,12 +8,8 @@
   -->
 
 <resources xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2">
-    <string name="button_upload">Carica</string>
     <string name="is_running" comment="substituted app_name">%s è in esecuzione</string>
     <string name="is_uploading" comment="substituted app_name">%s sta caricando le posizioni</string>
-    <string name="title_newtrack">Nuova traccia</string>
-    <string name="label_track">Traccia corrente</string>
-    <string name="label_newtrack_name">Nome della nuova traccia</string>
     <string name="label_name">Nome</string>
     <string name="label_last_update">Ultimo aggiornamento: %s</string>
     <string name="label_synchronized">Sincronizzato</string>
@@ -33,14 +29,10 @@
     <string name="pref_mindistance_summary">Distanza minima tra ogni aggiornamento della posizione</string>
     <string name="pref_minaccuracy_title">Precisione minima</string>
     <string name="pref_minaccuracy_summary">Precisione minima della posizione</string>
-    <string name="pref_imagesize_title">Grandezza dell’immagine</string>
-    <string name="pref_imagesize_summary">Massime dimensioni delle immagini caricate in pixel. In caso di ridimensionamento dell’immagine, una copia verrà salvata nella cartella dell’applicazione. Se scegli l’opzione “dimensioni effettive”, non ne verrà fatta una copia, dunque i file originali dovranno essere disponibili al momento dell’upload.</string>
     <string name="pref_livesync_title">Sincronizzazione live</string>
-    <string name="pref_livesync_summary">Caricamento continuo (live) delle posizioni al server. Richiede il nome utente, password e l’indirizzo del server.</string>
+    <string name="pref_livesync_summary">Caricamento continuo (live) delle posizioni al server.</string>
     <string name="pref_autostart_title">Avvio automatico</string>
     <string name="pref_autostart_summary">L’applicazione sì avvierà all’accensione del dispositivo</string>
-    <string name="pref_external_title">Consenti comandi esterni</string>
-    <string name="pref_external_summary">Consenti comandi esterni da altre applicazioni per facilitare l’automazione e la programmazione di eventi.</string>
     <string name="pref_provider_title">Fornitore della geolocalizzazione</string>
     <string name="pref_provider_summary">La posizione può essere ricavata dal GPS, dalla rete dati, o da entrambi. Usare sia il GPS che la rete darà risultati più accurati, a costo della batteria.</string>
     <string name="pref_units_title">Unità di misura</string>
@@ -48,7 +40,6 @@
     <string name="pref_units_metric">Metrico</string>
     <string name="pref_units_imperial">Imperiale</string>
     <string name="pref_units_nautical">Nautico</string>
-    <string name="pref_auto_name_title">Modello nome della traccia</string>
     <string name="pref_auto_name_summary" formatted="false">Modello per il nome della traccia. Il seguente modello verrà utilizzato per i nomi: %y (anno), %m (mese), %d (giorno), %H (ore), %M (minuti), %S (secondi). Se hai bisogno del simbolo della percentuale, utilizza %%.</string>
     <string name="label_status">Stato</string>
     <string name="label_location">Posizione</string>
@@ -71,7 +62,6 @@
     <string name="about_license">Licenza: GPL</string>
     <string name="uploading_failed">Caricamento fallito:</string>
     <string name="uploading_done">Caricamento completato</string>
-    <string name="track_summary">Sommario della traccia</string>
     <string name="summary_distance" comment="1-distance, 2-unit name">%1$s %2$s</string>
     <plurals name="summary_positions">
         <item quantity="one">%d posizione</item>
@@ -98,7 +88,6 @@
     <string name="using_network">Connessione dati in utilizzo</string>
     <string name="using_gps">GPS in utilizzo</string>
     <string name="export">Esporta in GPX</string>
-    <string name="waypoint">Marcatore</string>
     <string name="nothing_to_export">Niente da esportare</string>
     <string name="export_done">Traccia salvata con successo</string>
     <string name="export_failed">Esportazione fallita</string>
@@ -113,7 +102,6 @@
     <string name="pref_mintime_other">Intervallo minimo in secondi</string>
     <string name="pref_mindistance_other">Distanza minima in metri</string>
     <string name="pref_minaccuracy_other">Precisione minima in metri</string>
-    <string name="pref_imagesize_other">Massima larghezza/altezza in pixel</string>
     <string name="unit_nmile">nm</string>
     <string name="pref_cat_location">Tracciamento</string>
     <string name="pref_cat_server">Server</string>
@@ -130,13 +118,9 @@
     <string name="accuracy_meters">%d m di precisione</string>
     <string name="meters_asl">%s m a.s.l.</string>
     <string name="label_position">Posizione</string>
-    <string name="label_waypoint_description">Descrizione del marcatore</string>
     <string name="label_add_photo">Aggiungi una foto</string>
     <string name="button_save">Salva</string>
     <string name="tracking">Tracciamento</string>
-    <string name="clear">Resetta traccia</string>
-    <string name="share_link">Condividi link della traccia</string>
-    <string name="image_task_failed">Ridimensionamento dell\'immagine fallito</string>
     <string name="background_location_rationale">I permessi di localizzazione in background sono necessari solamente quando il tracciamento inizia senza l\'interazione dell\'utente: attraverso un comando esterno oppure quando un\'applicazione è automaticamente avviata all\'accensione del dispositivo.\nPer avviare questa funzionalità va scelta l\'opzione \"%s\" nella finestra di dialogo dei permessi di localizzazione.\nProcedere ai permessi dell\'applicazione?</string>
     <string name="background_location_required">Sono necessari i permessi di localizzazione in background</string>
     </resources>

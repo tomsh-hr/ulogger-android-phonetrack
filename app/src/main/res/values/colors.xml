@@ -15,12 +15,17 @@
     <color name="colorPink">#fff48787</color>
     <color name="colorWhite">#ffffffff</color>
     <!-- colorAccent-->
-    <color name="colorBlue">#ff80cbc4</color>
+    <color name="colorBlue">#4169E1</color>
     <!-- colorPrimary-->
-    <color name="colorGray">#ff212121</color>
+    <color name="primary">#d9ddde</color>
     <!-- colorPrimaryDark-->
     <color name="colorBlack">#ff0A0A0A</color>
     <!-- colorButtonNormal-->
     <color name="colorGrayLight">#ff5a595b</color>
     <color name="colorGrayLighter">#ff8b8b8c</color>
+    <color name="background">#ffffffff</color>
+    <color name="text">#FF212121</color> 
+    <color name="colorSwipe">#d9ddde</color> 
+    <color name="colorSwipeThumb">#8a9599</color> 
+    <color name="trackSelector">#FFFFFFFF</color> 
 </resources>

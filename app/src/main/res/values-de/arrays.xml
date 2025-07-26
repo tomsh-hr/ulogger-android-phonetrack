@@ -43,13 +43,4 @@
         <item>benutzerdefiniert</item>
     </string-array>
 
-    <string-array name="imageSizeEntries">
-        <item>tatsächliche Größe</item>
-        <item>800 Pixel</item>
-        <item>1080 Pixel</item>
-        <item>1280 Pixel</item>
-        <item>1920 Pixel</item>
-        <item>benutzerdefiniert</item>
-    </string-array>
-
     </resources>

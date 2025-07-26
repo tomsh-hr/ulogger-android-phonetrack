@@ -21,64 +21,7 @@
         android:fitsSystemWindows="true"
         android:orientation="vertical">
 
-        <LinearLayout
-            style="?android:attr/buttonBarStyle"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="@dimen/main_margin_start"
-            android:layout_marginTop="@dimen/button_bar_margin_top"
-            android:layout_marginEnd="@dimen/main_margin_end"
-            android:background="@drawable/round_corners_background"
-            android:backgroundTint="@color/colorBlack"
-            android:orientation="horizontal"
-            android:paddingTop="@dimen/button_bar_padding_top"
-            android:paddingBottom="@dimen/button_bar_padding_bottom">
-
-            <Button
-                android:id="@+id/buttonWaypoint"
-                style="?android:attr/buttonBarButtonStyle"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:background="@drawable/button_background"
-                android:drawableTop="@drawable/ic_add_location_white_24dp"
-                android:paddingTop="@dimen/button_padding_top"
-                android:paddingBottom="@dimen/button_padding_bottom"
-                android:text="@string/waypoint"
-                android:textAllCaps="false"
-                android:textColor="?android:attr/textColorAlertDialogListItem" />
-
-            <Button
-                android:id="@+id/buttonUpload"
-                style="?android:attr/buttonBarButtonStyle"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:background="@drawable/button_background"
-                android:drawableTop="@drawable/ic_cloud_upload_white_24dp"
-                android:paddingTop="@dimen/button_padding_bottom"
-                android:paddingBottom="@dimen/button_padding_bottom"
-                android:text="@string/button_upload"
-                android:textAllCaps="false"
-                android:textColor="?android:attr/textColorAlertDialogListItem" />
-
-            <Button
-                android:id="@+id/buttonNewTrack"
-                style="?android:attr/buttonBarButtonStyle"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:background="@drawable/button_background"
-                android:drawableTop="@drawable/ic_library_add_white_24dp"
-                android:paddingTop="@dimen/button_padding_bottom"
-                android:paddingBottom="@dimen/button_padding_bottom"
-                android:text="@string/title_newtrack"
-                android:textAllCaps="false"
-                android:textColor="?android:attr/textColorAlertDialogListItem" />
-
-        </LinearLayout>
-
-        <net.fabiszewski.ulogger.ui.SwipeSwitch
+        <net.tomsh.phonetracklogger.ui.SwipeSwitch
             android:id="@+id/switchLogger"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -91,6 +34,7 @@
             android:paddingTop="@dimen/swipe_padding_top"
             android:paddingBottom="@dimen/swipe_padding_bottom"
             android:text="@string/tracking"
+            android:textColor="@color/text"
             android:textIsSelectable="false"
             android:textSize="16sp"
             android:thumb="@drawable/thumb_selector"
@@ -98,64 +42,98 @@
             app:switchPadding="@dimen/switch_padding"
             app:track="@drawable/track_selector" />
 
+        
+
         <LinearLayout
+            android:id="@+id/layoutServer"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginStart="@dimen/main_margin_start"
             android:layout_marginTop="@dimen/block_distance"
             android:layout_marginEnd="@dimen/main_margin_end"
             android:background="@drawable/round_corners_background"
-            android:backgroundTint="@color/colorGray"
+            android:backgroundTint="@color/primary"
             android:orientation="horizontal"
             android:paddingStart="@dimen/block_padding_x"
             android:paddingTop="@dimen/block_padding_y"
             android:paddingEnd="@dimen/block_padding_x"
             android:paddingBottom="@dimen/block_padding_y">
 
+            <!-- Left column with icon and label -->
             <LinearLayout
-                android:id="@+id/layoutSummary"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="2"
-                android:clickable="true"
-                android:focusable="true"
-                android:orientation="vertical">
+                android:orientation="vertical"
+                android:clickable="false"
+                android:focusable="false">
 
                 <TextView
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:drawablePadding="@dimen/block_padding_drawable"
-                    android:text="@string/label_track"
+                    android:text="@string/label_server"
                     android:textSize="@dimen/label_font_size"
                     android:textStyle="bold"
-                    app:drawableStartCompat="@drawable/ic_directions_walk_white_24dp" />
+                    app:drawableStartCompat="@drawable/ic_cloud_upload_white_24dp" />
 
                 <TextView
-                    android:id="@+id/newtrack_label"
+                    android:id="@+id/server_label"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="@dimen/block_indent"
+                    android:text="@string/dash"
+                    android:textColor="@color/colorBlue"
+                    android:textSize="@dimen/label_font_size"
+                    tools:text="https://nextcloud.mydomain.com/phonetrack" />
+
+                <TextView
+                    android:id="@+id/sync_error"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="@dimen/block_indent"
                     android:text=""
-                    android:textColor="@color/colorBlue"
+                    android:textColor="@color/colorPink"
                     android:textSize="@dimen/label_font_size"
-                    tools:text="Auto_2020.06.18_19.42.17" />
+                    android:visibility="gone"
+                    tools:text="Connection error: Failed to connect to /10.0.0.15:80"
+                    tools:visibility="visible" />
             </LinearLayout>
 
+            <!-- Sync Button -->
             <Button
-                android:id="@+id/buttonShare"
-                android:layout_width="50dp"
-                android:layout_height="50dp"
-                android:layout_gravity="top"
-                android:layout_marginStart="@dimen/block_padding_share_start"
-                android:background="@drawable/share_button_inset"
-                android:contentDescription="@string/share_link"
-                android:foreground="?android:attr/selectableItemBackground"
-                android:visibility="gone"
-                tools:ignore="UnusedAttribute"
-                tools:targetApi="m"
-                tools:visibility="visible" />
+    android:id="@+id/buttonSync"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:layout_gravity="center_vertical|end"
+    android:layout_marginStart="@dimen/block_padding_share_start"
+    android:text="@string/button_sync"
+    android:drawableTop="@drawable/ic_cloud_upload_white_24dp"
+    android:textAllCaps="false"
+    android:backgroundTint="@color/primary"
+    android:background="@drawable/round_corners_background"
+    android:padding="12dp"
+    android:textColor="@color/text"
+    android:shadowColor="#80000000"
+    android:shadowDx="2"
+    android:shadowDy="2"
+    android:shadowRadius="4"
+    android:visibility="gone" />
+
+
+
+            <!-- Setup Server Button -->
+            <Button
+                android:id="@+id/buttonSetupServer"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="end"
+                android:padding="8dp"
+                android:text="@string/setup_server"
+                android:visibility="gone" />
 
         </LinearLayout>
+
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -164,7 +142,7 @@
             android:layout_marginTop="@dimen/block_distance"
             android:layout_marginEnd="@dimen/main_margin_end"
             android:background="@drawable/round_corners_background"
-            android:backgroundTint="@color/colorGray"
+            android:backgroundTint="@color/primary"
             android:orientation="vertical"
             android:paddingStart="@dimen/block_padding_x"
             android:paddingTop="@dimen/block_padding_y"
@@ -223,19 +201,65 @@
                 android:textColor="@color/colorBlue"
                 android:textSize="@dimen/label_font_size"
                 tools:text="3 positions behind" />
+        </LinearLayout>
+
+        <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+            xmlns:app="http://schemas.android.com/apk/res-auto"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="@dimen/main_margin_start"
+            android:layout_marginTop="@dimen/block_distance"
+            android:layout_marginEnd="@dimen/main_margin_end"
+            android:background="@drawable/round_corners_background"
+            android:backgroundTint="@color/primary"
+            android:orientation="vertical"
+            android:paddingStart="@dimen/block_padding_x"
+            android:paddingTop="@dimen/block_padding_y"
+            android:paddingEnd="@dimen/block_padding_x"
+            android:paddingBottom="@dimen/block_padding_y">
+            
+            <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:drawablePadding="@dimen/block_padding_drawable"
+            android:text="@string/label_summary"
+            android:textSize="@dimen/label_font_size"
+            android:textStyle="bold"
+            app:drawableStartCompat="@drawable/ic_equalizer_white_24dp" />
+
 
             <TextView
-                android:id="@+id/sync_error"
+                android:id="@+id/summary_distance"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="@dimen/block_indent"
-                android:text=""
-                android:textColor="@color/colorPink"
+                android:layout_marginTop="8dp"
+                android:drawablePadding="@dimen/block_padding_drawable"
+                android:text="@string/dash"
                 android:textSize="@dimen/label_font_size"
-                android:visibility="gone"
-                tools:text="Connection error: Failed to connect to /10.0.0.15:80"
-                tools:visibility="visible" />
+                app:drawableStartCompat="@drawable/ic_straighten_white_24dp" />
+
+            <TextView
+                android:id="@+id/summary_duration"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
+                android:drawablePadding="@dimen/block_padding_drawable"
+                android:text="@string/dash"
+                android:textSize="@dimen/label_font_size"
+                app:drawableStartCompat="@drawable/ic_schedule_white_24dp" />
+
+            <TextView
+                android:id="@+id/summary_positions"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
+                android:drawablePadding="@dimen/block_padding_drawable"
+                android:text="@string/dash"
+                android:textSize="@dimen/label_font_size"
+                app:drawableStartCompat="@drawable/ic_linear_scale_white_24dp" />
+
         </LinearLayout>
+
 
     </LinearLayout>
 </ScrollView>

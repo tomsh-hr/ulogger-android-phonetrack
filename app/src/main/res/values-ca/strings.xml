@@ -8,11 +8,7 @@
   -->
 
 <resources xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2">
-    <string name="button_upload">Pujar</string>
     <string name="is_running" comment="substituted app_name">%s s’està executant</string>
-    <string name="title_newtrack">Nova ruta</string>
-    <string name="label_track">Ruta actual</string>
-    <string name="label_newtrack_name">Nom de la nova ruta</string>
     <string name="label_name">Nom</string>
     <string name="label_last_update">Última actualizació: %s</string>
     <string name="label_synchronized">Sincronitzat</string>
@@ -32,14 +28,10 @@
     <string name="pref_mindistance_summary">Distància mínima entre actualizacions de l’ubicació</string>
     <string name="pref_minaccuracy_title">Precisió mínima</string>
     <string name="pref_minaccuracy_summary">Precisió mínima de la posició</string>
-    <string name="pref_imagesize_title">Tamany de l’imatge</string>
-    <string name="pref_imagesize_summary">Ampla i alçada màximes de les imatges pujades, en píxels. En cas de reducció, la còpia de la imatge redimensionada s’emmagatzemarà temporalment a la carpeta de l’aplicació abans de pujar-la. Si trieu l’opció “mida actuall”, no es farà cap còpia, els fitxers originals han d’estar disponibles durant la càrrega.</string>
     <string name="pref_livesync_title">Sincronització contínua</string>
-    <string name="pref_livesync_summary">Pujada contínua de posicions cap al servidor. Requereix usuari, contrasenya i la url del servidor vàlids.</string>
+    <string name="pref_livesync_summary">Pujada contínua de posicions cap al servidor.</string>
     <string name="pref_autostart_title">Inici automàtic</string>
     <string name="pref_autostart_summary">L’aplicació s’iniciarà a l’arrancar el sistema</string>
-    <string name="pref_external_title">Permetre comandes externes</string>
-    <string name="pref_external_summary">Permetre rebre comandes d’altres aplicacions per facilitar l’automatització i la programació de tasques.</string>
     <string name="pref_provider_title">Proveïdor d’ubicació</string>
     <string name="pref_provider_summary">L’ubicació pot ser proporcionada pel proveïdor de gps, de la xarxa o per ambdós. utilitzar ambdós proveïdors proporcionarà els millors resultats, però un major consum de bateria.</string>
     <string name="pref_units_title">Unitats</string>
@@ -47,7 +39,6 @@
     <string name="pref_units_metric">Mètriques</string>
     <string name="pref_units_imperial">Imperials</string>
     <string name="pref_units_nautical">Nàutiques</string>
-    <string name="pref_auto_name_title">Plantilla del nom de ruta</string>
     <string name="pref_auto_name_summary" formatted="false">Plantilla del nom de la nova ruta. Els següents patrons seran substituits amb elements de data actual: %y (any), %m (mes), %d (dia), %H (hora), %M (minut), %S (segon). Si necessita un caràcter de percentatge literal, utilitzi %%.</string>
     <string name="label_status">Estat</string>
     <string name="label_location">Ubicació</string>
@@ -70,7 +61,6 @@
     <string name="about_license">Llicència: GPL</string>
     <string name="uploading_failed">La pujada ha fallat:</string>
     <string name="uploading_done">Pujada completada</string>
-    <string name="track_summary">Resum de la ruta</string>
     <string name="summary_distance" comment="1-distance, 2-unit name">%1$s %2$s</string>
     <plurals name="summary_positions">
         <item quantity="one">%d posició</item>
@@ -97,7 +87,6 @@
     <string name="using_network">Utilizant proveïdor de xarxa</string>
     <string name="using_gps">Utilizant proveïdor gps</string>
     <string name="export">Exportar a GPX</string>
-    <string name="waypoint">Punt de pas</string>
     <string name="nothing_to_export">No hi ha res a exportar</string>
     <string name="export_done">La ruta s’ha desat correctament</string>
     <string name="export_failed">Ha fallat l’exportació</string>
@@ -112,7 +101,6 @@
     <string name="pref_mintime_other">Interval mínim de temps en segons</string>
     <string name="pref_mindistance_other">Distància mínima en metres</string>
     <string name="pref_minaccuracy_other">Precisió mínima en metres</string>
-    <string name="pref_imagesize_other">Amplada/alçada màximes, en píxels, de l’imatge</string>
     <string name="unit_nmile">nm</string>
     <string name="pref_cat_location">Seguiment d’ubicació</string>
     <string name="pref_cat_server">Servidor</string>
@@ -129,10 +117,7 @@
     <string name="accuracy_meters">%dm de precisió</string>
     <string name="meters_asl">%sm a.s.l</string>
     <string name="label_position">Posició</string>
-    <string name="label_waypoint_description">Descripció del punt de pas</string>
     <string name="label_add_photo">Afegir foto</string>
     <string name="button_save">Desar</string>
     <string name="tracking">Seguiment d’ubicació</string>
-    <string name="clear">Netejar ruta</string>
-    <string name="share_link">Enllaç per compartir ruta</string>
     </resources>

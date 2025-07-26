@@ -1,0 +1,55 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:padding="20dp">
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:contentDescription="@string/label_server_url"
+        android:labelFor="@id/newserver_edittext"
+        android:text="@string/label_server_url" />
+
+    <EditText
+        android:id="@+id/newserver_edittext"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:ems="10"
+        android:importantForAutofill="no"
+        android:inputType="textUri" />
+
+    <TextView
+        android:id="@+id/newserver_error"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:textColor="#f44336"
+        android:visibility="gone"
+        android:text="This will be replaced"
+        android:textSize="12sp"
+        android:paddingTop="4dp" />
+
+    <LinearLayout
+        style="?android:attr/buttonBarStyle"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="end"
+        android:orientation="horizontal">
+
+        <Button
+            android:id="@+id/newserver_button_cancel"
+            style="?android:attr/buttonBarButtonStyle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/cancel" />
+
+        <Button
+            android:id="@+id/newserver_button_submit"
+            style="?android:attr/buttonBarButtonStyle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/submit" />
+
+    </LinearLayout>
+
+</LinearLayout>

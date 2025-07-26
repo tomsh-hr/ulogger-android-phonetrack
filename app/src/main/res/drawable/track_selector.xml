@@ -14,16 +14,16 @@
         <shape android:shape="rectangle">
             <corners android:radius="50dp" />
             <size android:height="40dp" />
-            <solid android:color="@android:color/black" />
-            <stroke android:color="#00000000" android:width="15dp" />
+            <solid android:color="@color/colorSwipe" />
+            <stroke android:color="@color/trackSelector" android:width="15dp" />
         </shape>
     </item>
     <item android:state_checked="false">
         <shape android:shape="rectangle">
             <corners android:radius="50dp" />
             <size android:height="40dp" />
-            <solid android:color="@android:color/black" />
-            <stroke android:color="#00000000" android:width="15dp" />
+            <solid android:color="@color/colorSwipe" />
+            <stroke android:color="@color/trackSelector" android:width="15dp" />
         </shape>
     </item>
 

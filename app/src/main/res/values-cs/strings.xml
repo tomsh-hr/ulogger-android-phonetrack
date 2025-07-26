@@ -8,12 +8,8 @@
   -->
 
 <resources xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2">
-    <string name="button_upload">Nahrát</string>
     <string name="is_running" comment="substituted app_name">%s běží</string>
     <string name="is_uploading" comment="substituted app_name">%s nahrává pozice</string>
-    <string name="title_newtrack">Nová trasa</string>
-    <string name="label_track">Aktuální trasa</string>
-    <string name="label_newtrack_name">Nový název trasy</string>
     <string name="label_name">Název</string>
     <string name="label_last_update">Poslední aktualizace: %s</string>
     <string name="label_synchronized">Synchronizováno</string>
@@ -33,14 +29,10 @@
     <string name="pref_mindistance_summary">Minimální vzdálenost mezi aktualizacemi umístění</string>
     <string name="pref_minaccuracy_title">Minimální přesnost</string>
     <string name="pref_minaccuracy_summary">Minimální přesnost polohy</string>
-    <string name="pref_imagesize_title">Velikost obrázku</string>
-    <string name="pref_imagesize_summary">Maximální šířka / výška nahraných obrázků v pixelech. V případě převzorkování ve zmenšené velikosti bude kopie dočasně uložena do složky aplikace před nahráním. Pokud zvolíte možnost „skutečná velikost“, nebude vytvořena žádná kopie, takže během nahrávání musí být k dispozici původní soubory.</string>
     <string name="pref_livesync_title">Okamžitá synchronizace</string>
-    <string name="pref_livesync_summary">Okamžité nahrávání pozic na server. Vyžaduje platné uživatelské jméno, heslo a URL serveru.</string>
+    <string name="pref_livesync_summary">Okamžité nahrávání pozic na server.</string>
     <string name="pref_autostart_title">Automatický start</string>
     <string name="pref_autostart_summary">Aplikace se spustí při startu systému</string>
-    <string name="pref_external_title">Povolit externí příkazy</string>
-    <string name="pref_external_summary">Povolit přijímání příkazů z jiných aplikací pro usnadnění automatizace a plánování úloh.</string>
     <string name="pref_provider_title">Poskytovatel umístění</string>
     <string name="pref_provider_summary">Umístění může být určeno přes GPS, přes internet, nebo oběma. Oba poskytovatelé poskytnou nejlepší výsledky, ale vyžadují více energie.</string>
     <string name="pref_units_title">Jednotky</string>
@@ -48,7 +40,6 @@
     <string name="pref_units_metric">Metrický</string>
     <string name="pref_units_imperial">Imperiální</string>
     <string name="pref_units_nautical">Námořní</string>
-    <string name="pref_auto_name_title">Šablona názvu trasy</string>
     <string name="pref_auto_name_summary" formatted="false">Šablona pro nový název trasy. Následující vzory budou nahrazeny prvky aktuálního data: %y(year), %m(month), %d(day), %H(hour), %M(minute), %S(second).. Potřebujete-li doslovný procentuální znak, použijte %%.</string>
     <string name="label_status">Stav</string>
     <string name="label_location">Lokace</string>
@@ -71,7 +62,6 @@
     <string name="about_license">Licence: GPL</string>
     <string name="uploading_failed">Nahrávání se nezdařilo:</string>
     <string name="uploading_done">Nahrávání hotovo</string>
-    <string name="track_summary">Souhrn trasy</string>
     <string name="summary_distance" comment="1-distance, 2-unit name">%1$s %2$s</string>
     <plurals name="summary_positions">
         <item quantity="one">%d pozice</item>
@@ -99,7 +89,6 @@
     <string name="using_network">Použití poskytovatele sítě</string>
     <string name="using_gps">Použití poskytovatele gps</string>
     <string name="export">Export do GPX</string>
-    <string name="waypoint">Trasový bod</string>
     <string name="nothing_to_export">Nic k exportu</string>
     <string name="export_done">Trasa úspěšně uložena</string>
     <string name="export_failed">Export se nezdařil</string>
@@ -115,7 +104,6 @@
     <string name="pref_mintime_other">Minimální časový interval v sekundách</string>
     <string name="pref_mindistance_other">Minimální vzdálenost v metrech</string>
     <string name="pref_minaccuracy_other">Minimální přesnost v metrech</string>
-    <string name="pref_imagesize_other">Maximální šířka / výška obrázku v pixelech</string>
     <string name="unit_nmile">nm</string>
     <string name="pref_cat_location">Trasování</string>
     <string name="pref_cat_server">Server</string>
@@ -132,20 +120,15 @@
     <string name="accuracy_meters">%d m přesnost</string>
     <string name="meters_asl">%s m a.s.l.</string>
     <string name="label_position">Poloha</string>
-    <string name="label_waypoint_description">Popis trasového bodu</string>
     <string name="label_add_photo">Přidat fotku</string>
     <string name="button_save">Uložit</string>
     <string name="tracking">Trasování</string>
-    <string name="clear">Vymazat trasu</string>
-    <string name="share_link">Sdílet odkaz na stopu</string>
-    <string name="image_task_failed">Převzorkování obrázku se nezdařilo</string>
     <string name="background_location_rationale">Oprávnění polohy na pozadí je potřeba pouze, když je tracking spuštěn bez zásahu uživatele: pomocí externího příkazu nebo pokud je aplikace automaticky spuštěna po startu systému.\nAby tato funkce fungovala, musíte vybrat \"%s\" možnost v dialogu oprávnění polohy. .\nPokračovat k oprávněním aplikace?</string>
     <string name="background_location_required">Požadováno oprávnění polohy na pozadí</string>
     <string name="label_self_check">Vlastní kontrola</string>
     <string name="self_check_approximate_location_rationale">Požadováno. Bez tohoto povolení nebude možné získat lokaci.</string>
     <string name="self_check_precise_location_rationale">Volitelné. Musí být povoleno pro použití přesné polohy z GPS</string>
     <string name="self_check_background_location_rationale">Volitelně. Vyžaduje se pouze v případě, že je aplikace spuštěna automatizovaně*.</string>
-    <string name="self_check_storage_rationale">Volitelně. Nutné pouze v případě, že chcete k trasovým bodům připojit snímky z kamery.</string>
     <string name="self_check_notifications_rationale">Volitelné. Pokud je povoleno, budete upozorněni na práci aplikace na pozadí.</string>
     <string name="self_check_battery_unrestricted_rationale">Volitelné. Důrazně doporučujeme pro spolehlivou práci. Pokud to není povoleno, může systém zastavit aplikaci běžící na pozadí, aby šetřil baterii. Vyžadováno pro automatizované použití*</string>
     <string name="self_check_battery_unrestricted_title">Neomezené používání baterie</string>
