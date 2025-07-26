@@ -43,13 +43,4 @@
         <item>其它</item>
     </string-array>
 
-    <string-array name="imageSizeEntries">
-        <item>实际尺寸</item>
-        <item>800 像素</item>
-        <item>1080 像素</item>
-        <item>1280 像素</item>
-        <item>1920 像素</item>
-        <item>其它</item>
-    </string-array>
-
     </resources>

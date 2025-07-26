@@ -32,9 +32,4 @@
     <dimen name="switch_padding">10dp</dimen>
     <dimen name="switch_min_width">200dp</dimen>
     <dimen name="switch_margin_top">0dp</dimen>
-    <!-- waypoint fragment -->
-    <dimen name="waypoint_button_min_height">40dp</dimen>
-    <dimen name="waypoint_comment_padding">12dp</dimen>
-    <dimen name="waypoint_camera_margin_y">30dp</dimen>
-    <dimen name="waypoint_thumbnail_size">100dp</dimen>
 </resources>

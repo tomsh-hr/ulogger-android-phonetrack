@@ -8,12 +8,8 @@
   -->
 
 <resources xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2">
-    <string name="button_upload">Wyślij</string>
     <string name="is_running" comment="substituted app_name">%s jest uruchomiony</string>
     <string name="is_uploading" comment="substituted app_name">%s wysyła pozycje</string>
-    <string name="title_newtrack">Nowa trasa</string>
-    <string name="label_track">Bieżąca trasa</string>
-    <string name="label_newtrack_name">Nazwa nowej trasy</string>
     <string name="label_name">Nazwa</string>
     <string name="label_last_update">Ostatnia aktualizacja: %s</string>
     <string name="label_synchronized">Wszystko wysłane</string>
@@ -33,14 +29,10 @@
     <string name="pref_mindistance_summary">Minimalna odległość pomiędzy kolejnymi pozycjami</string>
     <string name="pref_minaccuracy_title">Minimalna dokładność</string>
     <string name="pref_minaccuracy_summary">Minimalna dokładność pozycji</string>
-    <string name="pref_imagesize_title">Rozmiar zdjęcia</string>
-    <string name="pref_imagesize_summary">Maksymalna wysokość/szerokość przesyłanych zdjęć. W przypadku zmniejszania rozmiaru, kopia obrazu przed wysłaniem będzie przechowywana tymczasowo w folderze aplikacji. W przypadku wybrania opcji „bez zmian”, oryginalny plik musi być dostępny podczas synchronizacji, ponieważ kopia obrazu nie jest tworzona.</string>
     <string name="pref_livesync_title">Ciągła synchronizacja</string>
-    <string name="pref_livesync_summary">Wysyłanie pozycji na serwer w czasie rzeczywistym. Wymaga podania użytkownika, hasła i adresu serwera.</string>
+    <string name="pref_livesync_summary">Wysyłanie pozycji na serwer w czasie rzeczywistym.</string>
     <string name="pref_autostart_title">Auto start</string>
     <string name="pref_autostart_summary">Aplikacja zostanie uruchomiona przy starcie systemu</string>
-    <string name="pref_external_title">Zezwalaj na sterowanie</string>
-    <string name="pref_external_summary">Przyjmuj komendy sterujące od innych aplikacji, aby ułatwić automatyzację i planowanie zadań.</string>
     <string name="pref_provider_title">Usługa lokalizacji</string>
     <string name="pref_provider_summary">Lokalizacja może być otrzymywana z GPS-a, z sieci (GSM/Wi-Fi) lub z obu na raz. Wybranie obu może dać lepsze rezultaty, ale kosztem większego zużycia baterii.</string>
     <string name="pref_units_title">Jednostki</string>
@@ -48,7 +40,6 @@
     <string name="pref_units_metric">Metryczne</string>
     <string name="pref_units_imperial">Anglosaskie</string>
     <string name="pref_units_nautical">Nawigacyjne</string>
-    <string name="pref_auto_name_title">Szablon nazwy trasy</string>
     <string name="pref_auto_name_summary" formatted="false">Szablon nazwy nowej trasy. Następujące wzorce zostaną zastąpione odpowiednimi elementami bieżącej daty: %y (rok), %m (miesiąc), %d (dzień), %H (godzina), %M (minuta), %S (sekunda). Aby uzyskać znak procenta użyj %%.</string>
     <string name="label_status">Status</string>
     <string name="label_location">Lokalizacja</string>
@@ -71,7 +62,6 @@
     <string name="about_license">Licencja: GPL</string>
     <string name="uploading_failed">Błąd wysyłania</string>
     <string name="uploading_done">Wysyłanie zakończone</string>
-    <string name="track_summary">Podsumowanie trasy</string>
     <string name="summary_distance" comment="1-distance, 2-unit name">%1$s %2$s</string>
     <plurals name="summary_positions">
         <item quantity="one">%d pozycja</item>
@@ -99,7 +89,6 @@
     <string name="using_network">Uzyskano dostęp do lokalizacji z sieci</string>
     <string name="using_gps">Uzyskano dostęp do lokalizacji z GPS-a</string>
     <string name="export">Eksport do GPX</string>
-    <string name="waypoint">Punkt</string>
     <string name="nothing_to_export">Nie ma nic do wyeksportowania</string>
     <string name="export_done">Trasa została pomyślnie zapisana</string>
     <string name="export_failed">Błąd eksportu</string>
@@ -115,7 +104,6 @@
     <string name="pref_mintime_other">Minimalny czas w sekundach</string>
     <string name="pref_mindistance_other">Minimalna odległość w metrach</string>
     <string name="pref_minaccuracy_other">Minimalna dokładność w metrach</string>
-    <string name="pref_imagesize_other">Maksymalna wysokość/szerokość w pikselach</string>
     <string name="unit_nmile">Mm</string>
     <string name="pref_cat_location">Śledzenie pozycji</string>
     <string name="pref_cat_server">Serwer</string>
@@ -132,20 +120,15 @@
     <string name="accuracy_meters">dokładność %d m</string>
     <string name="meters_asl">%s m n.p.m.</string>
     <string name="label_position">Pozycja</string>
-    <string name="label_waypoint_description">Opis punktu</string>
     <string name="label_add_photo">Dodaj zdjęcie</string>
     <string name="button_save">Zapisz</string>
     <string name="tracking">Śledzenie</string>
-    <string name="clear">Usuń trasę</string>
-    <string name="share_link">Udostępnij link do trasy</string>
-    <string name="image_task_failed">Błąd konwersji obrazu</string>
     <string name="background_location_rationale">Zgoda na lokalizację w tle jest wymagana jedynie wtedy, gdy śledzenie jest uruchamiane bez udziału użytkownika: poprzez komendę z innej aplikacji lub podczas automatycznego uruchamiania przy starcie systemu. Aby funkcjonalności te działały poprawnie należy wybrać opcję „%s” w dialogu dostępu do lokalizacji.\nCzy przejść do uprawnień aplikacji?</string>
     <string name="background_location_required">Wymagana zgoda na lokalizację w tle</string>
     <string name="label_self_check">Diagnostyka</string>
     <string name="self_check_approximate_location_rationale">Wymagane. Bez tej zgody aplikacja nie będzie mogła miała dostępu do lokalizacji</string>
     <string name="self_check_precise_location_rationale">Opcjonalne. Potrzebne, jeśli aplikacja ma mieć dostęp do dokładnej lokalizacji za pomocą systemu GPS</string>
     <string name="self_check_background_location_rationale">Opcjonalne. Wymagane jedynie w sytuacji, kiedy aplikacja jest uruchamiana w sposób automatyczny*</string>
-    <string name="self_check_storage_rationale">Opcjonalne. Potrzebne, jeśli chcesz dodawać do punktów zdjęcia z aparatu</string>
     <string name="self_check_notifications_rationale">Opcjonalne. Potrzebne jeśli chcesz być powiadamiany o tym, że aplikacja pracuje w tle</string>
     <string name="self_check_battery_unrestricted_rationale">Opcjonalne. Zalecane dla stabilnej pracy. Bez tej zgody system może zatrzymać aplikację działającą w tle w celu oszczędzania baterii. Wymagane w przypadku automatyzacji*</string>
     <string name="self_check_battery_unrestricted_title">Nieograniczone użycie baterii</string>

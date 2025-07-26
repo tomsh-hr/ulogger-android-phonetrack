@@ -43,13 +43,4 @@
         <item>besterik</item>
     </string-array>
 
-    <string-array name="imageSizeEntries">
-        <item>jatorrizko tamaina</item>
-        <item>800 px</item>
-        <item>1080 px</item>
-        <item>1280 px</item>
-        <item>1920 px</item>
-        <item>besterik</item>
-    </string-array>
-
     </resources>

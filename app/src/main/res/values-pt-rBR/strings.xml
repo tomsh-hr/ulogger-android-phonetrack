@@ -8,12 +8,8 @@
   -->
 
 <resources xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2">
-    <string name="button_upload">Enviar</string>
     <string name="is_running" comment="substituted app_name">%s está funcionando</string>
     <string name="is_uploading" comment="substituted app_name">%s está enviando posições</string>
-    <string name="title_newtrack">Novo caminho</string>
-    <string name="label_track">Caminho atual</string>
-    <string name="label_newtrack_name">Novo nome do caminho</string>
     <string name="label_name">Nome</string>
     <string name="label_last_update">Última atualização: %s</string>
     <string name="label_synchronized">Sincronizado</string>
@@ -33,14 +29,10 @@
     <string name="pref_mindistance_summary">Distância mínima entre atualizações de localização</string>
     <string name="pref_minaccuracy_title">Precisão mínima</string>
     <string name="pref_minaccuracy_summary">Precisão mínima de posição</string>
-    <string name="pref_imagesize_title">Tamanho de imagem</string>
-    <string name="pref_imagesize_summary">Largura/altura máxima de imagens carregadas em píxeis. Quando a imagem for redimensionada para reduzir o tamanho a cópia será temporariamente armazenada em pasta do app antes de ser enviada. Se você escolher a opção "tamanho real", nenhuma cópia será feita, por isto os arquivos originais devem estar disponíveis durante o envio.</string>
     <string name="pref_livesync_title">Sincronização em tempo real</string>
-    <string name="pref_livesync_summary">Envio  de posições em tempo real ao servidor. Requer nome de usuário, senha e a URL do servidor.</string>
+    <string name="pref_livesync_summary">Envio  de posições em tempo real ao servidor.</string>
     <string name="pref_autostart_title">Iniciar automaticamente</string>
     <string name="pref_autostart_summary">O app será executado na inicialização do sistema</string>
-    <string name="pref_external_title">Permitir comandos externos</string>
-    <string name="pref_external_summary">Permitir o recebimento de comandos de outros apps para facilitar a automação e o agendamento de tarefas.</string>
     <string name="pref_provider_title">Fornecedor de localização</string>
     <string name="pref_provider_summary">A localização pode ser disponibilizada pelo provedor de GPS, pela rede ou por os dois. Ao usar os dois provedores você terá melhor resultado, mas consumo da bateria será maior.</string>
     <string name="pref_units_title">Unidades</string>
@@ -48,7 +40,6 @@
     <string name="pref_units_metric">Métrica</string>
     <string name="pref_units_imperial">Imperial</string>
     <string name="pref_units_nautical">Náutico</string>
-    <string name="pref_auto_name_title">Modelo de nome do caminho</string>
     <string name="pref_auto_name_summary" formatted="false">Modelo para o novo nome de caminho. Os seguintes padrões serão substituídos por elementos de data atual: %y (ano), %m (mês), %d (dia), %H (hora), %M (minuto), %S (segundo). Se precisar de símbolo do porcentagem, use %%.</string>
     <string name="label_status">Status</string>
     <string name="label_location">Localização</string>
@@ -71,7 +62,6 @@
     <string name="about_license">Licença: GPL</string>
     <string name="uploading_failed">O envio falhou:</string>
     <string name="uploading_done">Envio concluído</string>
-    <string name="track_summary">Resumo do caminho</string>
     <string name="summary_distance" comment="1-distance, 2-unit name">%1$s %2$s</string>
     <plurals name="summary_positions">
         <item quantity="one">%d posição</item>
@@ -98,7 +88,6 @@
     <string name="using_network">Provedor de rede em uso</string>
     <string name="using_gps">Provedor de GPS em uso</string>
     <string name="export">Exportar para GPX</string>
-    <string name="waypoint">Ponto de caminho</string>
     <string name="nothing_to_export">Nada para exportar</string>
     <string name="export_done">O caminho salvo com sucesso</string>
     <string name="export_failed">A exportação falhou</string>
@@ -113,7 +102,6 @@
     <string name="pref_mintime_other">Intervalo mínimo de tempo em segundos</string>
     <string name="pref_mindistance_other">Distância mínima em metros</string>
     <string name="pref_minaccuracy_other">Precisão mínima em metros</string>
-    <string name="pref_imagesize_other">Largura/altura máxima de imagem em píxeis</string>
     <string name="unit_nmile">nm</string>
     <string name="pref_cat_location">Rastreamento de localização</string>
     <string name="pref_cat_server">Servidor</string>
@@ -130,13 +118,9 @@
     <string name="accuracy_meters">%d m de precisão</string>
     <string name="meters_asl">%s m s.n.m.</string>
     <string name="label_position">Posição</string>
-    <string name="label_waypoint_description">Descrição do ponto de caminho</string>
     <string name="label_add_photo">Adicionar foto</string>
     <string name="button_save">Salvar</string>
     <string name="tracking">Rastreamento</string>
-    <string name="clear">Eliminar o caminho</string>
-    <string name="share_link">Compartilhe link do caminho</string>
-    <string name="image_task_failed">Erro ao redimensionar a imagem</string>
     <string name="background_location_rationale">A permissão de localização em segundo plano só é necessária quando o rastreamento é iniciado sem interação de usuário: através de comando externo ou quando o app é automaticamente executado na inicialização do sistema.\nPara que esta funcionalidade funcione, você deve selecionar a opção \"%s\" no aviso sobre permissão de localização.\nProsseguir para as permissões do app?</string>
     <string name="background_location_required">Necessária a permissão de localização em segundo plano</string>
     </resources>

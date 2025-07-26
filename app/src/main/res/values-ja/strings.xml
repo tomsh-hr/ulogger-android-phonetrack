@@ -8,11 +8,7 @@
   -->
 
 <resources xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2">
-    <string name="button_upload">アップロード</string>
     <string name="is_running" comment="substituted app_name">%s が実行中</string>
-    <string name="title_newtrack">新しいトラック</string>
-    <string name="label_track">現在のトラック</string>
-    <string name="label_newtrack_name">新しいトラック名</string>
     <string name="label_name">名前</string>
     <string name="label_last_update">最終更新: %s</string>
     <string name="label_synchronized">同期しました</string>
@@ -62,7 +58,6 @@
     <string name="about_license">ライセンス: GPL</string>
     <string name="uploading_failed">アップロードに失敗しました:</string>
     <string name="uploading_done">アップロード完了</string>
-    <string name="track_summary">トラックサマリー</string>
     <string name="summary_distance" comment="1-distance, 2-unit name">%1$s %2$s</string>
     <plurals name="summary_positions">
         <item quantity="other">%d 場所</item>

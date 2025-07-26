@@ -14,7 +14,7 @@
     <PreferenceCategory
         android:icon="@drawable/ic_location_on_blue_24dp"
         android:title="@string/pref_cat_location">
-        <net.fabiszewski.ulogger.ui.ListWithEditTextPreference
+        <net.tomsh.phonetracklogger.ui.ListWithEditTextPreference
             android:defaultValue="@string/pref_mintime_default"
             android:dialogMessage="@string/pref_mintime_summary"
             android:entries="@array/minTimeEntries"
@@ -23,7 +23,7 @@
             android:title="@string/pref_mintime_title"
             app:useSimpleSummaryProvider="true"
             ulogger:otherSummary="@string/pref_mintime_other" />
-        <net.fabiszewski.ulogger.ui.ListWithEditTextPreference
+        <net.tomsh.phonetracklogger.ui.ListWithEditTextPreference
             android:defaultValue="@string/pref_mindistance_default"
             android:dialogMessage="@string/pref_mindistance_summary"
             android:entries="@array/minDistanceEntries"
@@ -32,7 +32,7 @@
             android:title="@string/pref_mindistance_title"
             app:useSimpleSummaryProvider="true"
             ulogger:otherSummary="@string/pref_mindistance_other" />
-        <net.fabiszewski.ulogger.ui.ListWithEditTextPreference
+        <net.tomsh.phonetracklogger.ui.ListWithEditTextPreference
             android:defaultValue="@string/pref_minaccuracy_default"
             android:dialogMessage="@string/pref_minaccuracy_summary"
             android:entries="@array/minAccuracyEntries"
@@ -58,36 +58,21 @@
     <PreferenceCategory
         android:icon="@drawable/ic_cloud_upload_blue_24dp"
         android:title="@string/pref_cat_server">
-        <net.fabiszewski.ulogger.ui.TrimmedEditTextPreference
+        <net.tomsh.phonetracklogger.ui.TrimmedEditTextPreference
             android:dialogMessage="@string/pref_host_summary"
             android:key="prefHost"
             android:title="@string/pref_host_title"
             app:useSimpleSummaryProvider="true" />
-        <net.fabiszewski.ulogger.ui.ListWithEditTextPreference
-            android:defaultValue="@string/pref_imagesize_default"
-            android:dialogMessage="@string/pref_imagesize_summary"
-            android:entries="@array/imageSizeEntries"
-            android:entryValues="@array/imageSizeValues"
-            android:key="prefImageSize"
-            android:title="@string/pref_imagesize_title"
-            app:useSimpleSummaryProvider="true"
-            ulogger:otherSummary="@string/pref_imagesize_other" />
     </PreferenceCategory>
 
     <PreferenceCategory
         android:icon="@drawable/ic_build_blue_24dp"
         android:title="@string/pref_cat_other">
         <SwitchPreferenceCompat
-            android:defaultValue="@string/pref_autostart_default"
+            android:defaultValue="true"
             android:key="prefAutoStart"
             android:summary="@string/pref_autostart_summary"
             android:title="@string/pref_autostart_title" />
-
-        <SwitchPreferenceCompat
-            android:defaultValue="@string/pref_external_default"
-            android:key="prefAllowExternal"
-            android:summary="@string/pref_external_summary"
-            android:title="@string/pref_external_title" />
 
         <ListPreference
             android:defaultValue="@string/pref_units_metric"
@@ -96,13 +81,6 @@
             android:entryValues="@array/unitsEntries"
             android:key="prefUnits"
             android:title="@string/pref_units_title"
-            app:useSimpleSummaryProvider="true" />
-
-        <net.fabiszewski.ulogger.ui.AutoNamePreference
-            android:defaultValue="@string/pref_auto_name_default"
-            android:dialogMessage="@string/pref_auto_name_summary"
-            android:key="prefAutoName"
-            android:title="@string/pref_auto_name_title"
             app:useSimpleSummaryProvider="true" />
     </PreferenceCategory>
 

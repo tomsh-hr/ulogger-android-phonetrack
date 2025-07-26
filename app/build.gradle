@@ -13,11 +13,11 @@ android {
     compileSdk 35
 
     defaultConfig {
-        applicationId 'net.fabiszewski.ulogger'
+        applicationId 'net.tomsh.phonetracklogger'
         minSdkVersion 21
         targetSdkVersion 35
         versionCode 312
-        versionName '3.12'
+        versionName '1.0'
         resourceConfigurations += ['en', 'ca', 'cs', 'de', 'el', 'es', 'eu', 'fi', 'fr', 'gl', 'it', 'ja', 'pl', 'pt-rBR', 'ru', 'sk', 'zh-rCN']
     }
 
@@ -39,7 +39,7 @@ android {
     lint {
         disable 'GoogleAppIndexingWarning', 'MissingTranslation', 'NotificationIconCompatibility'
     }
-    namespace 'net.fabiszewski.ulogger'
+    namespace 'net.tomsh.phonetracklogger'
     buildFeatures {
         buildConfig true
     }

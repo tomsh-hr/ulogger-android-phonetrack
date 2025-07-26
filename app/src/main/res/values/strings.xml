@@ -8,14 +8,15 @@
   -->
 
 <resources xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2">
-    <string name="app_name" translatable="false">μlogger</string>
-    <string name="app_name_ascii" translatable="false">ulogger</string>
-    <string name="button_upload">Upload</string>
+    <string name="app_name" translatable="false">Phonetrack Logger</string>
+    <string name="app_name_ascii" translatable="false">Phonetrack-Logger</string>
     <string name="is_running" comment="substituted app_name">%s is running</string>
     <string name="is_uploading" comment="substituted app_name">%s is uploading positions</string>
-    <string name="title_newtrack">New track</string>
-    <string name="label_track">Current track</string>
-    <string name="label_newtrack_name">New track name</string>
+    <string name="label_server_url">Server URL</string>
+    <string name="pref_server_url">Server URL</string>
+    <string name="button_sync_now">Sync now</string>
+    <string name="server_ok">Server connection successful</string>
+    <string name="empty_server_url_warning">Please enter a valid server URL.</string>
     <string name="label_name">Name</string>
     <string name="label_last_update">Last update: %s</string>
     <string name="label_synchronized">Synchronized</string>
@@ -38,18 +39,12 @@
     <string name="pref_minaccuracy_title">Minimum accuracy</string>
     <string name="pref_minaccuracy_summary">Minimum accuracy of position</string>
     <string name="pref_minaccuracy_default" translatable="false">100</string>
-    <string name="pref_imagesize_title">Image size</string>
-    <string name="pref_imagesize_summary">Maximum width/height of uploaded images in pixels. In case of downsampling resized image copy will be temporarily stored in application folder before uploading. If you choose “actual size” option no copy will be made, so original files must be available during uploading.</string>
-    <string name="pref_imagesize_default" translatable="false">800</string>
     <string name="pref_livesync_title">Live synchronization</string>
-    <string name="pref_livesync_summary">Live uploading of positions to the server. Requires valid user name, password and server URL.</string>
+    <string name="pref_livesync_summary">Live uploading of positions to the server.</string>
     <string name="pref_livesync_default" translatable="false">false</string>
     <string name="pref_autostart_title">Auto start</string>
     <string name="pref_autostart_summary">Application will start on system boot</string>
-    <string name="pref_autostart_default" translatable="false">false</string>
-    <string name="pref_external_title">Allow external commands</string>
-    <string name="pref_external_summary">Allow receiving commands from other applications to facilitate automation and tasks scheduling.</string>
-    <string name="pref_external_default" translatable="false">false</string>
+    <string name="pref_autostart_default" translatable="false">true</string>
     <string name="pref_provider_title">Location provider</string>
     <string name="pref_provider_summary">Location may be supplied by GPS provider, by network or by both. Both providers will give best results, but use more battery.</string>
     <string name="pref_units_title">Units</string>
@@ -58,9 +53,7 @@
     <string name="pref_units_metric">Metric</string>
     <string name="pref_units_imperial">Imperial</string>
     <string name="pref_units_nautical">Nautical</string>
-    <string name="pref_auto_name_title">Track name template</string>
     <string name="pref_auto_name_summary" formatted="false">Template for new track name. Following patterns will be substituted with current date elements: %y (year), %m (month), %d (day), %H (hour), %M (minute), %S (second). If you need literal percent character use %%.</string>
-    <string name="pref_auto_name_default" formatted="false" translatable="false">Auto_%y.%m.%d_%H.%M.%S</string>
     <string name="label_status">Status</string>
     <string name="label_location">Location</string>
     <string name="label_synchronization">Synchronization</string>
@@ -84,7 +77,6 @@
     <string name="about_credits" translatable="false">© Bartek Fabiszewski</string>
     <string name="uploading_failed">Uploading failed:</string>
     <string name="uploading_done">Uploading done</string>
-    <string name="track_summary">Track summary</string>
     <string name="summary_distance" comment="1-distance, 2-unit name">%1$s %2$s</string>
     <plurals name="summary_positions">
         <item quantity="one">%d position</item>
@@ -110,7 +102,6 @@
     <string name="using_network">Using network provider</string>
     <string name="using_gps">Using GPS provider</string>
     <string name="export">Export to GPX</string>
-    <string name="waypoint">Waypoint</string>
     <string name="nothing_to_export">Nothing to export</string>
     <string name="export_done">Track successfully saved</string>
     <string name="export_failed">Export failed</string>
@@ -124,7 +115,6 @@
     <string name="pref_mintime_other">Minimum time interval in seconds</string>
     <string name="pref_mindistance_other">Minimum distance in meters</string>
     <string name="pref_minaccuracy_other">Minimum accuracy in meters</string>
-    <string name="pref_imagesize_other">Maximum image width/height in pixels</string>
     <string name="unit_nmile">nm</string>
     <string name="pref_cat_location">Tracking</string>
     <string name="pref_cat_server">Server</string>
@@ -141,20 +131,15 @@
     <string name="accuracy_meters">%d m accuracy</string>
     <string name="meters_asl">%s m a.s.l.</string>
     <string name="label_position">Position</string>
-    <string name="label_waypoint_description">Waypoint description</string>
     <string name="label_add_photo">Add photo</string>
     <string name="button_save">Save</string>
     <string name="tracking">Tracking</string>
-    <string name="clear">Clear track</string>
-    <string name="share_link">Share track link</string>
-    <string name="image_task_failed">Image resampling failed</string>
-    <string name="background_location_rationale">Background location permission is only needed when tracking is started without user interaction: through external command or when application is automatically started on system boot.\nFor this functionality to work you must select \"%s\" option in the location permission dialog.\nProceed to application permissions?</string>
+    <string name="background_location_rationale">Background location permission is only needed when tracking is started without user interaction: when application is automatically started on system boot.\nFor this functionality to work you must select \"%s\" option in the location permission dialog.\nProceed to application permissions?</string>
     <string name="background_location_required">Background location permission required</string>
     <string name="label_self_check">Self-check</string>
     <string name="self_check_approximate_location_rationale">Required. Without this permission application will not be able to acquire location</string>
     <string name="self_check_precise_location_rationale">Optional. Must be enabled to use precise location from GPS</string>
     <string name="self_check_background_location_rationale">Optional. Required only when application is started in an automated way*</string>
-    <string name="self_check_storage_rationale">Optional. Only necessary if you want to attach camera images to waypoints.</string>
     <string name="self_check_notifications_rationale">Optional. If allowed you will be notified about application working in the background.</string>
     <string name="self_check_battery_unrestricted_rationale">Optional. Highly recommended for reliable work. If not allowed the system may stop application while running in background in order to save battery. Required for automated usage*</string>
     <string name="self_check_battery_unrestricted_title">Unrestricted battery usage</string>
@@ -163,5 +148,13 @@
     <string name="self_check_server_configured">Server configured</string>
     <string name="self_check_server_reachable">Server reachable</string>
     <string name="self_check_valid_server_account">Valid server account</string>
-    <string name="self_check_automated_usage">* Automated usage: starting logging without user interaction from external application or on system boot</string>
+    <string name="self_check_automated_usage">* Automated usage: starting logging without user interaction on system boot</string>
+    <string name="label_summary">Summary</string>
+    <string name="label_server">Server</string>
+    <string name="setup_server">Setup server</string>
+    <string name="button_sync">Sync</string>
+    <string name="theme">Theme Light/Dark</string>
+    <string name="syncing">Syncing</string>
+    <string name="label_no_server_configured">No server configured</string>
+    <string name="checking">Checking…</string>
 </resources>

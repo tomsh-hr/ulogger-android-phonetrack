@@ -8,12 +8,8 @@
   -->
 
 <resources xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2">
-    <string name="button_upload">Опубликовать</string>
     <string name="is_running" comment="substituted app_name">%s запущен</string>
     <string name="is_uploading" comment="substituted app_name">%s загружает позиции</string>
-    <string name="title_newtrack">Новый трeк</string>
-    <string name="label_track">Текущий трeк</string>
-    <string name="label_newtrack_name">Имя нового трека</string>
     <string name="label_name">Имя</string>
     <string name="label_last_update">Последнее обновление: %s</string>
     <string name="label_synchronized">Синхронизировано</string>
@@ -33,14 +29,10 @@
     <string name="pref_mindistance_summary">Минимальное расстояние между обновлениями геопозиции</string>
     <string name="pref_minaccuracy_title">Минимальная точность</string>
     <string name="pref_minaccuracy_summary">Минимальная точность позиционирования</string>
-    <string name="pref_imagesize_title">Размер изображения</string>
-    <string name="pref_imagesize_summary">Максимальная ширина/высота загружаемых изображений в пикселях. В случае понижающей дискретизации копия изображения с измененным размером будет временно сохранена в папке приложения перед загрузкой. Если вы выберете опцию «Фактический размер», копии не будут созданы, поэтому исходные файлы должны быть доступны во время загрузки.</string>
-    <string name="pref_livesync_title">Синхронизация в реальном времени</string>
-    <string name="pref_livesync_summary">Для синхронизация с сервером в реальном времени необходимо указать действительное имя пользователя, пароль и гиперссылку на сервер.</string>
+   <string name="pref_livesync_title">Синхронизация в реальном времени</string>
+    <string name="pref_livesync_summary">Для синхронизации с сервером в реальном времени необходимо указать гиперссылку на сервер.</string>
     <string name="pref_autostart_title">Автоматический старт</string>
     <string name="pref_autostart_summary">Приложение будет запускаться при загрузке системы</string>
-    <string name="pref_external_title">Разрешить внешнее управление</string>
-    <string name="pref_external_summary">Разрешить принимать команды от других приложений для автоматизации процессов и периодических задач.</string>
     <string name="pref_provider_title">Настройки позиционирования</string>
     <string name="pref_provider_summary">Позиционирование может осуществляться по спутникам gps, или с использованием сети, а так же по обоим источникам. Использование всех источников обеспечит наилучшее позиционирование, но увеличит потребление энергии батареи.</string>
     <string name="pref_units_title">Единицы измерения</string>
@@ -48,7 +40,6 @@
     <string name="pref_units_metric">Метрическая система единиц</string>
     <string name="pref_units_imperial">Английская система единиц</string>
     <string name="pref_units_nautical">Естественные системы единиц</string>
-    <string name="pref_auto_name_title">Шаблон названия трэка</string>
     <string name="pref_auto_name_summary" formatted="false">Шаблон названия нового трека. Следующие элементы будут замещены текущей датой: %y (год), %m (месяц), %d (день), %H (часы), %M (минуты), %S (секунды). Для использования знака процента введите %%.</string>
     <string name="label_status">Статус</string>
     <string name="label_location">Позиционирование </string>
@@ -71,7 +62,6 @@
     <string name="about_license">Лицензия: GPL</string>
     <string name="uploading_failed">Ошибка выгрузки:</string>
     <string name="uploading_done">Выгрузка успешно завершена</string>
-    <string name="track_summary">Статистика трека</string>
     <string name="summary_distance" comment="1-distance, 2-unit name">%1$s %2$s</string>
     <plurals name="summary_positions">
         <item quantity="one">%d позиция</item>
@@ -99,7 +89,6 @@
     <string name="using_network">Использование сети</string>
     <string name="using_gps">Использование спутников gps</string>
     <string name="export">Экспортировать в GPX файл</string>
-    <string name="waypoint">Точка</string>
     <string name="nothing_to_export">Нечего экспортировать</string>
     <string name="export_done">Трек успешно сохранён</string>
     <string name="export_failed">Ошибка экспортирования</string>
@@ -115,7 +104,6 @@
     <string name="pref_mintime_other">Минимальное интервал в секундах</string>
     <string name="pref_mindistance_other">Минимальная дистанция в метрах</string>
     <string name="pref_minaccuracy_other">Минимальная точность в метрах</string>
-    <string name="pref_imagesize_other">Максимальная ширина/высота изображения в пикселях</string>
     <string name="unit_nmile">nm</string>
     <string name="pref_cat_location">Запись</string>
     <string name="pref_cat_server">Сервер</string>
@@ -132,13 +120,9 @@
     <string name="accuracy_meters">точность %d м</string>
     <string name="meters_asl">%s м</string>
     <string name="label_position">Координаты</string>
-    <string name="label_waypoint_description">Описание путевой точки</string>
     <string name="label_add_photo">Добавить фото</string>
     <string name="button_save">Сохранить</string>
     <string name="tracking">Запись</string>
-    <string name="clear">Удалить трек</string>
-    <string name="share_link">Поделиться ссылкой на трек</string>
-    <string name="image_task_failed">Ошибка передискретизации изображения</string>
     <string name="background_location_rationale">Разрешение на определение местоположения в фоновом режиме требуется только тогда, когда отслеживание запускается без взаимодействия с пользователем: с помощью внешней команды или когда приложение автоматически запускается при загрузке системы.\nЧтобы эта функция работала, вы должны выбрать опцию «%s» в диалоговом окне разрешения местоположения.\nПерейти к разрешениям приложения? </string>
     <string name="background_location_required">Требуется разрешение на определение местоположения в фоновом режиме</string>
     </resources>

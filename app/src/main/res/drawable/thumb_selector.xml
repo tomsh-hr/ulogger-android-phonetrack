@@ -13,7 +13,7 @@
         <shape android:shape="rectangle">
             <corners android:radius="30dp" />
             <size android:height="30dp" android:width="50dp" />
-            <solid android:color="#000000" />
+            <solid android:color="@color/colorSwipeThumb" />
             <stroke android:color="@color/colorGreen" android:width="4dp" />
         </shape>
     </item>
@@ -21,7 +21,7 @@
         <shape android:shape="rectangle">
             <corners android:radius="30dp" />
             <size android:height="30dp" android:width="50dp" />
-            <solid android:color="#000000" />
+            <solid android:color="@color/colorSwipeThumb" />
             <stroke android:color="@android:color/darker_gray" android:width="4dp" />
         </shape>
     </item>

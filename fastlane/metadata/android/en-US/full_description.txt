@@ -9,7 +9,6 @@ Features
 * uses GPS or network based location data
 * synchronizes location with web server in real time, in case of problems keeps retrying
 * alternatively works in offline mode; positions may be exported to file and uploaded to the server manually
-* allows adding waypoints with attached images and comments (required server version 1.0+ for synchronization)
 * configurable tracking settings
 * export to GPX, KML format
 * automation

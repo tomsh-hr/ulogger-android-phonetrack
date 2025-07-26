@@ -9,5 +9,5 @@
   -->
 
 <resources>
-    <string name="app_name" translatable="false">μlogger-dev</string>
+    <string name="app_name" translatable="false">phonetrack-logger-dev</string>
 </resources>

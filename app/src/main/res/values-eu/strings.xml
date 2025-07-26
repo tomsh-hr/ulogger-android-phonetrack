@@ -8,11 +8,7 @@
   -->
 
 <resources xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2">
-    <string name="button_upload">Igo</string>
     <string name="is_running" comment="substituted app_name">%s martxan dago</string>
-    <string name="title_newtrack">Ibilbide berria</string>
-    <string name="label_track">Oraingo ibilbidea</string>
-    <string name="label_newtrack_name">Ibilbide berriaren izena</string>
     <string name="label_name">Izena</string>
     <string name="label_last_update">Azken eguneratzea: %s</string>
     <string name="label_synchronized">Sinkronizatuta</string>
@@ -32,14 +28,10 @@
     <string name="pref_mindistance_summary">Distantzia minimoa kokalekuen eguneratzeen artean</string>
     <string name="pref_minaccuracy_title">Doitasun minimoa </string>
     <string name="pref_minaccuracy_summary">Posizioaren doitasun minimoa</string>
-    <string name="pref_imagesize_title">Irudi tamaina</string>
-    <string name="pref_imagesize_summary">Igotako irudien tamaina maximoa, zabalera/altuera pixeletan. Irudia txikiagotuz gero, behin behineko kopia bat gordeko da aplikazioaren karpetan igo aurretik. \"Jatorrizko tamaina\" aukeratzen baduzu ez da kopiarik gordeko, hortaz, igoerak dirauen bitartean irudiaren fitxategi originalek eskuragarri egon behar dute</string>
     <string name="pref_livesync_title">Zuzeneko sinkronizazioa</string>
-    <string name="pref_livesync_summary">Kokapena zuzenean zerbitzarira igo. Baliozko erabiltzaile, pasahitz eta zerbitzariaren URLa behar ditu</string>
+    <string name="pref_livesync_summary">Kokapena zuzenean zerbitzarira igo.</string>
     <string name="pref_autostart_title">Automatikoki hasi </string>
     <string name="pref_autostart_summary">Aplikazioa sistema abiatzean automatikoki hasiko da</string>
-    <string name="pref_external_title">Kanpoko komandoak onartu</string>
-    <string name="pref_external_summary">Beste aplikazioetatik komandoak jasotzea onartu, automatizazioa eta zereginen programazioa errazteko.</string>
     <string name="pref_provider_title">Kokapenaren jatorria</string>
     <string name="pref_provider_summary">Kokapena GPSak, datu-konexioak edo biek batera hornitu dezakete. Biak batera erabiliz doitasun handiena lortzen da, bateria gehiago erabiltzearen truk.</string>
     <string name="pref_units_title">Unitateak</string>
@@ -47,7 +39,6 @@
     <string name="pref_units_metric">Metrikoa</string>
     <string name="pref_units_imperial">Inperiala</string>
     <string name="pref_units_nautical">Itsasokoa</string>
-    <string name="pref_auto_name_title">Bide izenen txantiloia</string>
     <string name="pref_auto_name_summary" formatted="false">Bide berrientzako txantiloia. Ondorengo patroiak erabil ditzakezu: %y (urtea), %m (hilabetea), %d (eguna), %H (ordua), %M (minutua), %S (segundoa). Ehuneko zeinua sartu nahi baduzu erabili %%</string>
     <string name="label_status">Egoera</string>
     <string name="label_location">Kokapena</string>
@@ -70,7 +61,6 @@
     <string name="about_license">Lizentzia: GPL</string>
     <string name="uploading_failed">Hutsegitea igoeran</string>
     <string name="uploading_done">Igoera eginda</string>
-    <string name="track_summary">Bidearen laburpena</string>
     <string name="summary_distance" comment="1-distance, 2-unit name">%1$s %2$s</string>
     <plurals name="summary_positions">
         <item quantity="one">%d position</item>
@@ -96,7 +86,6 @@
     <string name="using_network">Datu-konexioa erabiltzen</string>
     <string name="using_gps">GPSa erabiltzen</string>
     <string name="export">GPXera esportatu</string>
-    <string name="waypoint">Bide-puntua</string>
     <string name="nothing_to_export">Exportatzeko daturik ez</string>
     <string name="export_done">Ibilbidea zuzen gordeta</string>
     <string name="export_failed">Akatsa esportatzean</string>
@@ -110,7 +99,6 @@
     <string name="pref_mintime_other">Denbora tarte minimoa segundotan</string>
     <string name="pref_mindistance_other">Distantzia minimoa metrotan</string>
     <string name="pref_minaccuracy_other">Doitasun minimoa metrotan</string>
-    <string name="pref_imagesize_other">Irudiaren zabalera/altuera maximoa pixeletan</string>
     <string name="unit_nmile">nm</string>
     <string name="pref_cat_location">Jarraipena egiten</string>
     <string name="pref_cat_server">Zerbitzaria</string>
@@ -127,10 +115,7 @@
     <string name="accuracy_meters">%d m-ko doitasuna</string>
     <string name="meters_asl">%s m</string>
     <string name="label_position">Posizioa</string>
-    <string name="label_waypoint_description">Bide-puntuaren deskribapena</string>
     <string name="label_add_photo">Argazkia gehitu</string>
     <string name="button_save">Gorde</string>
     <string name="tracking">Jarraipena egiten</string>
-    <string name="clear">Ibilbidea garbitu</string>
-    <string name="share_link">Ibilbidearen lotura partekatu</string>
     </resources>
